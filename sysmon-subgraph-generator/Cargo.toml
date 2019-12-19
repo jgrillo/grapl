@@ -2,12 +2,13 @@
 name = "sysmon-subgraph-generator"
 version = "0.1.0"
 authors = ["Insanitybit <insanitybit@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 graph-generator-lib = { path = "./graph-generator-lib/" }
 graph-descriptions = {package="grapl-graph-descriptions" , version="*"}
-sqs-lambda = "0.6.*"
-#sqs-lambda = {path = "./sqs-lambda/"}
+sqs-lambda = "0.11.*"
+#sqs-lambda = {path = "../../../workspace/sqs-lambda/"}
 serde_json = "*"
 serde = "1.0.71"
 serde_derive = "1.0.71"
@@ -20,21 +21,27 @@ lazy_static = "1.2.0"
 brotli = "3.1.0"
 sysmon = "0.2"
 chrono = "0.4.6"
-no-panic = "0.1.6"
 rayon = "1.0.3"
 stopwatch = "0.0.7"
 
 
-rusoto_core = {version = "0.40.0", default_features = false, features=["rustls"]}
-rusoto_s3 = {version = "0.40.0", default_features = false, features=["rustls"]}
-rusoto_sqs = {version = "0.40.0", default_features = false, features=["rustls"]}
+rusoto_core = {version = "0.42.0", default_features = false, features=["rustls"]}
+rusoto_s3 = {version = "0.42.0", default_features = false, features=["rustls"]}
+rusoto_sqs = {version = "0.42.0", default_features = false, features=["rustls"]}
 #rusoto_mock = "0.30.0"
 
 
-futures = "0.1.25"
+futures = {version="0.3", features=["compat"]}
+
 aws_lambda_events = "0.2.0"
 simple_logger = "1.0.1"
-lambda_runtime = "0.1.0"
+lambda_runtime = "0.2.1"
+
+#lambda = {git = "https://github.com/awslabs/aws-lambda-rust-runtime/lambda", branch = "async-await"}
+async-trait = "0.1.21"
+tokio = { version = "0.2.4", features = ["sync", "rt-core", "macros", "time", "rt-threaded"] }
+zstd = "0.5.1"
+tokio-compat = "0.1.0"
 
 
 [dependencies.uuid]

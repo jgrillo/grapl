@@ -1419,11 +1419,11 @@ class Grapl extends cdk.App {
             network.grapl_vpc
         );
 
-        new EngagementUx(
-            this,
-            'engagement-ux',
-            engagement_edge
-        );
+        // new EngagementUx(
+        //     this,
+        //     'engagement-ux',
+        //     engagement_edge
+        // );
     }
 }
 
