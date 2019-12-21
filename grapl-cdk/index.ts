@@ -471,6 +471,7 @@ class EventEmitters extends cdk.Stack {
                 s3.EventType.OBJECT_CREATED,
                 new s3Subs.SnsDestination(sysmon_logs_topic)
             );
+
         identity_mappings_bucket
             .addEventNotification(
                 s3.EventType.OBJECT_CREATED,
@@ -535,7 +536,9 @@ class SysmonSubgraphGenerator extends cdk.Stack {
         const service = new Service(this, 'sysmon-subgraph-generator', environment);
 
         service.readsFrom(reads_from);
-        addSubscription(this, subscribes_to, new snsSubs.SqsSubscription(service.queues.queue));
+
+        addSubscription(this, subscribes_to, new snsSubs.SqsSubscription(service.queues.queue), true);
+
         service.publishesToBucket(writes_to);
     }
 }
@@ -564,7 +567,7 @@ class GenericSubgraphGenerator extends cdk.Stack {
     }
 }
 
-function addSubscription(scope, topic, subscription) {
+function addSubscription(scope, topic, subscription, rawMessageDelivery?) {
     const config = subscription.bind(topic);
 
     new sns.Subscription(scope, 'Subscription', {
@@ -572,7 +575,7 @@ function addSubscription(scope, topic, subscription) {
         endpoint: config.endpoint,
         filterPolicy: config.filterPolicy,
         protocol: config.protocol,
-        rawMessageDelivery: config.rawMessageDelivery
+        rawMessageDelivery: rawMessageDelivery || config.rawMessageDelivery
     });
 }
 
@@ -1419,11 +1422,11 @@ class Grapl extends cdk.App {
             network.grapl_vpc
         );
 
-        // new EngagementUx(
-        //     this,
-        //     'engagement-ux',
-        //     engagement_edge
-        // );
+        new EngagementUx(
+            this,
+            'engagement-ux',
+            engagement_edge
+        );
     }
 }
 

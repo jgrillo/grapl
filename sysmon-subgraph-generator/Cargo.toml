@@ -7,8 +7,7 @@ edition = "2018"
 [dependencies]
 graph-generator-lib = { path = "./graph-generator-lib/" }
 graph-descriptions = {package="grapl-graph-descriptions" , version="*"}
-sqs-lambda = "0.11.*"
-#sqs-lambda = {path = "../../../workspace/sqs-lambda/"}
+sqs-lambda = "0.12.*"
 serde_json = "*"
 serde = "1.0.71"
 serde_derive = "1.0.71"
@@ -42,6 +41,7 @@ async-trait = "0.1.21"
 tokio = { version = "0.2.4", features = ["sync", "rt-core", "macros", "time", "rt-threaded"] }
 zstd = "0.5.1"
 tokio-compat = "0.1.0"
+env_logger = "0.7.1"
 
 
 [dependencies.uuid]

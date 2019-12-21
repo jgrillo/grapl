@@ -15,7 +15,10 @@ extern crate rusoto_core;
 extern crate rusoto_s3;
 extern crate rusoto_sqs;
 extern crate serde;
-extern crate simple_logger;
+//extern crate simple_logger;
+
+extern crate env_logger;
+
 extern crate sqs_lambda;
 extern crate stopwatch;
 extern crate sysmon;
@@ -56,11 +59,11 @@ use prost::Message;
 use sqs_completion_handler::*;
 use sqs_consumer::*;
 use sqs_lambda::completion_event_serializer::CompletionEventSerializer;
-use sqs_lambda::event_decoder::EventDecoder;
+use sqs_lambda::event_decoder::PayloadDecoder;
 use sqs_lambda::event_emitter::S3EventEmitter;
 use sqs_lambda::event_handler::EventHandler;
 use sqs_lambda::event_processor;
-use sqs_lambda::event_retriever::S3EventRetriever;
+use sqs_lambda::event_retriever::S3PayloadRetriever;
 use sqs_lambda::sqs_completion_handler;
 use sqs_lambda::sqs_consumer;
 use std::time::{Duration, UNIX_EPOCH, SystemTime};
@@ -429,7 +432,7 @@ pub struct ZstdDecoder {
     pub buffer: Vec<u8>
 }
 
-impl EventDecoder<Vec<u8>> for ZstdDecoder
+impl PayloadDecoder<Vec<u8>> for ZstdDecoder
 {
     fn decode(&mut self, body: Vec<u8>) -> Result<Vec<u8>, Box<dyn std::error::Error>>
     {
@@ -551,7 +554,7 @@ impl EventHandler for SysmonSubgraphGenerator
 //    let s3_client = Arc::new(S3Client::new(region.clone()));
 //
 //    info!("Creating retriever");
-//    let retriever = S3EventRetriever::new(
+//    let retriever = S3PayloadRetriever::new(
 //        s3_client.clone(),
 //        |d| {info!("Parsing: {:?}", d); events_from_s3_sns_sqs(d)},
 //        ZstdDecoder{buffer: Vec::with_capacity(1 << 8)},
@@ -597,95 +600,102 @@ fn map_sqs_message(event: aws_lambda_events::event::sqs::SqsMessage) -> rusoto_s
 
 
 fn my_handler(event: SqsEvent, ctx: Context) -> Result<(), HandlerError> {
-//    info!("EVENT {:?}", _event.clone());
-    std::thread::spawn(move || {
-        tokio_compat::run_std(
-            async {
+    info!("Handling event");
 
-                let queue_url = std::env::var("QUEUE_URL").expect("QUEUE_URL");
-                info!("Queue Url: {}", queue_url);
-                let bucket_prefix = std::env::var("BUCKET_PREFIX").expect("BUCKET_PREFIX");
+    tokio_compat::run_std(
+        async {
 
-                let bucket = bucket_prefix + "-unid-subgraphs-generated-bucket";
+            let queue_url = std::env::var("QUEUE_URL").expect("QUEUE_URL");
+            info!("Queue Url: {}", queue_url);
+            let bucket_prefix = std::env::var("BUCKET_PREFIX").expect("BUCKET_PREFIX");
 
-                let region = {
-                    let region_str = std::env::var("AWS_REGION").expect("AWS_REGION");
-                    Region::from_str(&region_str).expect("Region error")
-                };
+            let bucket = bucket_prefix + "-unid-subgraphs-generated-bucket";
+            info!("Output events to: {}", bucket);
+            let region = {
+                let region_str = std::env::var("AWS_REGION").expect("AWS_REGION");
+                Region::from_str(&region_str).expect("Region error")
+            };
 
-                info!("Defining consume policy");
-                let consume_policy = ConsumePolicy::new(
-                    ctx, // Use the Context.deadline from the lambda_runtime
-                    Duration::from_secs(2), // Stop consuming when there's 2 seconds left in the runtime
-                );
+            info!("SqsCompletionHandler");
+            let sqs_completion_handler = SqsCompletionHandlerActor::new(
+                SqsCompletionHandler::new(
+                    SqsClient::new(region.clone()),
+                    queue_url.to_string(),
+                    SubgraphSerializer { proto: Vec::with_capacity(1024) },
+                    S3EventEmitter::new(
+                        S3Client::new(region.clone()),
+                        bucket.to_owned(),
+                        time_based_key_fn,
+                    ),
+                    CompletionPolicy::new(
+                        1000, // Buffer up to 1000 messages
+                        Duration::from_secs(30), // Buffer for up to 30 seconds
+                    ),
+                )
+            );
 
-                info!("Defining consume policy");
-                let (tx, shutdown_notify) = tokio::sync::oneshot::channel();
 
-                info!("SqsConsumer");
-                let sqs_consumer = SqsConsumerActor::new(
-                    SqsConsumer::new(SqsClient::new(region.clone()), queue_url.clone(), consume_policy, tx)
-                );
+            info!("Defining consume policy");
+            let consume_policy = ConsumePolicy::new(
+                ctx, // Use the Context.deadline from the lambda_runtime
+                Duration::from_secs(2), // Stop consuming when there's 2 seconds left in the runtime
+                3, // If we get 3 empty receives in a row, stop consuming
+            );
 
-                info!("SqsCompletionHandler");
-                let sqs_completion_handler = SqsCompletionHandlerActor::new(
-                    SqsCompletionHandler::new(
-                        SqsClient::new(region.clone()),
-                        queue_url.to_string(),
-                        SubgraphSerializer { proto: Vec::with_capacity(1024) },
-                        S3EventEmitter::new(
-                            S3Client::new(region.clone()),
-                            bucket.to_owned(),
-                            time_based_key_fn,
-                        ),
-                        CompletionPolicy::new(
-                            1000, // Buffer up to 1000 messages
-                            Duration::from_secs(30), // Buffer for up to 30 seconds
-                        ),
-                    )
-                );
+            info!("Defining consume policy");
+            let (tx, shutdown_notify) = tokio::sync::oneshot::channel();
 
-                info!("EventProcessors");
-                let event_processors: Vec<_> = (0..40)
-                    .map(|_| {
-                        EventProcessorActor::new(EventProcessor::new(
-                            sqs_consumer.clone(),
-                            sqs_completion_handler.clone(),
-                            SysmonSubgraphGenerator {},
-                            S3EventRetriever::new(S3Client::new(region.clone()), ZstdDecoder::default()),
-                        ))
-                    })
-                    .collect();
+            info!("SqsConsumer");
+            let sqs_consumer = SqsConsumerActor::new(
+                SqsConsumer::new(
+                    SqsClient::new(region.clone()),
+                    queue_url.clone(),
+                    consume_policy,
+                    sqs_completion_handler.clone(),
+                    tx
+                )
+            );
 
-                info!("Start Processing");
+            info!("EventProcessors");
+            let event_processors: Vec<_> = (0..40)
+                .map(|_| {
+                    EventProcessorActor::new(EventProcessor::new(
+                        sqs_consumer.clone(),
+                        sqs_completion_handler.clone(),
+                        SysmonSubgraphGenerator {},
+                        S3PayloadRetriever::new(S3Client::new(region.clone()), ZstdDecoder::default()),
+                    ))
+                })
+                .collect();
 
-                futures::future::join_all(event_processors.iter().map(|ep| ep.start_processing())).await;
+            info!("Start Processing");
 
-                let mut proc_iter = event_processors.iter().cycle();
-                for event in event.records {
-                    let next_proc = proc_iter.next().unwrap();
-                    next_proc.process_event(
-                        map_sqs_message(event)
-                    ).await;
-                }
+            futures::future::join_all(event_processors.iter().map(|ep| ep.start_processing())).await;
 
-                info!("Waiting for shutdown notification");
-                // Wait for the consumers to shutdown
-                let _ = shutdown_notify.await;
+            let mut proc_iter = event_processors.iter().cycle();
+            for event in event.records {
+                let next_proc = proc_iter.next().unwrap();
+                next_proc.process_event(
+                    map_sqs_message(event)
+                ).await;
+            }
 
-                tokio::time::delay_for(Duration::from_millis(100)).await;
-                info!("Consumer shutdown");
+            info!("Waiting for shutdown notification");
+            // Wait for the consumers to shutdown
+            let _ = shutdown_notify.await;
 
-            });
+            tokio::time::delay_for(Duration::from_millis(100)).await;
+            info!("Consumer shutdown");
 
-    }).join();
+        });
+
 
     info!("Completed execution");
     Ok(())
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    simple_logger::init_with_level(log::Level::Info).unwrap();
+    env_logger::init(); // This initializes the `env_logger`
 
     info!("Starting lambda");
     lambda!(my_handler);
