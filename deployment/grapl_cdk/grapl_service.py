@@ -1,8 +1,8 @@
-from typing import cast
+from typing import cast, Dict, Optional
 
-from deployment.grapl_cdk.event_source import EventSource
+from grapl_cdk.event_source import EventSource
 
-from aws_cdk import core, aws_s3, aws_sqs, aws_lambda, aws_iam, aws_sns_subscriptionss
+from aws_cdk import core, aws_s3, aws_sqs, aws_lambda, aws_iam, aws_sns_subscriptions
 from aws_cdk.core import PhysicalName
 from aws_cdk.aws_ec2 import IVpc, Vpc
 from aws_cdk.aws_lambda import Code, Runtime
@@ -17,8 +17,10 @@ class GraplService(object):
             vpc: IVpc,
             handler_path: str,
             runtime: Runtime,
-            handler='main.lambda_handler'
+            handler='main.lambda_handler',
+            environment: Optional[Dict[str, str]]=None,
     ):
+        environment = environment or {}
         self.vpc = vpc
         self.scope = scope
         self.queue = aws_sqs.Queue(
@@ -27,6 +29,10 @@ class GraplService(object):
             queue_name=PhysicalName.GENERATE_IF_NEEDED,
         )
 
+        default_environment = {
+            'QUEUE_URL': self.queue.queue_url,
+        }
+
         self.fn = aws_lambda.Function(
             scope,
             id + 'service',
@@ -34,6 +40,7 @@ class GraplService(object):
             handler=handler,
             runtime=runtime,
             vpc=vpc,
+            environment={**default_environment, **environment}
         )
 
     def triggered_by(self, event_source: EventSource) -> 'GraplService':

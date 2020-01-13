@@ -1,0 +1,21 @@
+{
+  "Resources": {
+    "sysmoneventsourcesourcetopic8C876129": {
+      "Type": "AWS::SNS::Topic",
+      "Metadata": {
+        "aws:cdk:path": "sysmon-event-source/sysmon-event-sourcesource_topic/Resource"
+      }
+    },
+    "sysmoneventsourcesourcebucket0E7E47FD": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "grapl-sysmon-log-bucket"
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "sysmon-event-source/sysmon-event-sourcesource_bucket/Resource"
+      }
+    }
+  }
+}

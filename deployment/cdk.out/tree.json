@@ -8,9 +8,3030 @@
         "id": "Tree",
         "path": "Tree"
       },
-      "grapl-cdk": {
-        "id": "grapl-cdk",
-        "path": "grapl-cdk"
+      "graplvpcs-stack": {
+        "id": "graplvpcs-stack",
+        "path": "graplvpcs-stack",
+        "children": {
+          "GraplVPC": {
+            "id": "GraplVPC",
+            "path": "graplvpcs-stack/GraplVPC",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "graplvpcs-stack/GraplVPC/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPC",
+                  "aws:cdk:cloudformation:props": {
+                    "cidrBlock": "10.0.0.0/16",
+                    "enableDnsHostnames": true,
+                    "enableDnsSupport": true,
+                    "instanceTenancy": "default",
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "graplvpcs-stack/GraplVPC"
+                      }
+                    ]
+                  }
+                }
+              },
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "graplvpcs-stack/GraplVPC/PublicSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.0.0/19",
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "availabilityZone": "us-east-1a",
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet1"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/Acl"
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet1"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPublicSubnet1RouteTable16865F49"
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPublicSubnet1Subnet33F87D6F"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPublicSubnet1RouteTable16865F49"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "GraplVPCIGW9A85538E"
+                        }
+                      }
+                    }
+                  },
+                  "EIP": {
+                    "id": "EIP",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/EIP",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::EIP",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "vpc",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet1"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "NATGateway": {
+                    "id": "NATGateway",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet1/NATGateway",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::NatGateway",
+                      "aws:cdk:cloudformation:props": {
+                        "allocationId": {
+                          "Fn::GetAtt": [
+                            "GraplVPCPublicSubnet1EIP4C72368C",
+                            "AllocationId"
+                          ]
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPublicSubnet1Subnet33F87D6F"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet1"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "graplvpcs-stack/GraplVPC/PublicSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.32.0/19",
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "availabilityZone": "us-east-1b",
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet2"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet2/Acl"
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet2"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPublicSubnet2RouteTable7BE3A104"
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPublicSubnet2Subnet773F9062"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPublicSubnet2RouteTable7BE3A104"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "GraplVPCIGW9A85538E"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "PublicSubnet3": {
+                "id": "PublicSubnet3",
+                "path": "graplvpcs-stack/GraplVPC/PublicSubnet3",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet3/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.64.0/19",
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "availabilityZone": "us-east-1c",
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet3"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet3/Acl"
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet3/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PublicSubnet3"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet3/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPublicSubnet3RouteTable3F3A4FED"
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPublicSubnet3SubnetDF049FE8"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "graplvpcs-stack/GraplVPC/PublicSubnet3/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPublicSubnet3RouteTable3F3A4FED"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "GraplVPCIGW9A85538E"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "PrivateSubnet1": {
+                "id": "PrivateSubnet1",
+                "path": "graplvpcs-stack/GraplVPC/PrivateSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.96.0/19",
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "availabilityZone": "us-east-1a",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PrivateSubnet1"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet1/Acl"
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PrivateSubnet1"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPrivateSubnet1RouteTable52F1222F"
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPrivateSubnet1SubnetC6852983"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPrivateSubnet1RouteTable52F1222F"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "GraplVPCPublicSubnet1NATGatewayB8519806"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "PrivateSubnet2": {
+                "id": "PrivateSubnet2",
+                "path": "graplvpcs-stack/GraplVPC/PrivateSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.128.0/19",
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "availabilityZone": "us-east-1b",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PrivateSubnet2"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet2/Acl"
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PrivateSubnet2"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPrivateSubnet2RouteTable79C867D4"
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPrivateSubnet2SubnetDAF9D2E0"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPrivateSubnet2RouteTable79C867D4"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "GraplVPCPublicSubnet1NATGatewayB8519806"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "PrivateSubnet3": {
+                "id": "PrivateSubnet3",
+                "path": "graplvpcs-stack/GraplVPC/PrivateSubnet3",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet3/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.160.0/19",
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "availabilityZone": "us-east-1c",
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PrivateSubnet3"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet3/Acl"
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet3/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GraplVPCD95366B5"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "graplvpcs-stack/GraplVPC/PrivateSubnet3"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet3/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPrivateSubnet3RouteTable83EA9E92"
+                        },
+                        "subnetId": {
+                          "Ref": "GraplVPCPrivateSubnet3SubnetC625644E"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "graplvpcs-stack/GraplVPC/PrivateSubnet3/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GraplVPCPrivateSubnet3RouteTable83EA9E92"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "GraplVPCPublicSubnet1NATGatewayB8519806"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "IGW": {
+                "id": "IGW",
+                "path": "graplvpcs-stack/GraplVPC/IGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::InternetGateway",
+                  "aws:cdk:cloudformation:props": {
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "graplvpcs-stack/GraplVPC"
+                      }
+                    ]
+                  }
+                }
+              },
+              "VPCGW": {
+                "id": "VPCGW",
+                "path": "graplvpcs-stack/GraplVPC/VPCGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPCGatewayAttachment",
+                  "aws:cdk:cloudformation:props": {
+                    "vpcId": {
+                      "Ref": "GraplVPCD95366B5"
+                    },
+                    "internetGatewayId": {
+                      "Ref": "GraplVPCIGW9A85538E"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "graplvpcs-stack/Exports",
+            "children": {
+              "Output{\"Ref\":\"GraplVPCD95366B5\"}": {
+                "id": "Output{\"Ref\":\"GraplVPCD95366B5\"}",
+                "path": "graplvpcs-stack/Exports/Output{\"Ref\":\"GraplVPCD95366B5\"}"
+              },
+              "Output{\"Ref\":\"GraplVPCPrivateSubnet1SubnetC6852983\"}": {
+                "id": "Output{\"Ref\":\"GraplVPCPrivateSubnet1SubnetC6852983\"}",
+                "path": "graplvpcs-stack/Exports/Output{\"Ref\":\"GraplVPCPrivateSubnet1SubnetC6852983\"}"
+              },
+              "Output{\"Ref\":\"GraplVPCPrivateSubnet2SubnetDAF9D2E0\"}": {
+                "id": "Output{\"Ref\":\"GraplVPCPrivateSubnet2SubnetDAF9D2E0\"}",
+                "path": "graplvpcs-stack/Exports/Output{\"Ref\":\"GraplVPCPrivateSubnet2SubnetDAF9D2E0\"}"
+              },
+              "Output{\"Ref\":\"GraplVPCPrivateSubnet3SubnetC625644E\"}": {
+                "id": "Output{\"Ref\":\"GraplVPCPrivateSubnet3SubnetC625644E\"}",
+                "path": "graplvpcs-stack/Exports/Output{\"Ref\":\"GraplVPCPrivateSubnet3SubnetC625644E\"}"
+              }
+            }
+          }
+        }
+      },
+      "sysmon-event-source": {
+        "id": "sysmon-event-source",
+        "path": "sysmon-event-source",
+        "children": {
+          "sysmon-event-sourcesource_topic": {
+            "id": "sysmon-event-sourcesource_topic",
+            "path": "sysmon-event-source/sysmon-event-sourcesource_topic",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "sysmon-event-source/sysmon-event-sourcesource_topic/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {}
+                }
+              }
+            }
+          },
+          "sysmon-event-sourcesource_bucket": {
+            "id": "sysmon-event-sourcesource_bucket",
+            "path": "sysmon-event-source/sysmon-event-sourcesource_bucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "sysmon-event-source/sysmon-event-sourcesource_bucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketName": "grapl-sysmon-log-bucket"
+                  }
+                }
+              },
+              "Notifications": {
+                "id": "Notifications",
+                "path": "sysmon-event-source/sysmon-event-sourcesource_bucket/Notifications"
+              }
+            }
+          }
+        }
+      },
+      "sysmon-subgraph-generator": {
+        "id": "sysmon-subgraph-generator",
+        "path": "sysmon-subgraph-generator",
+        "children": {
+          "sysmon-subgraph-generator-subnetgroup": {
+            "id": "sysmon-subgraph-generator-subnetgroup",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generator-subnetgroup",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::ElastiCache::SubnetGroup",
+              "aws:cdk:cloudformation:props": {
+                "description": "List of subnets for {id}",
+                "subnetIds": [
+                  {
+                    "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet1SubnetC6852983C267B947"
+                  },
+                  {
+                    "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet2SubnetDAF9D2E0F9C618F3"
+                  },
+                  {
+                    "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet3SubnetC625644E86F72BC2"
+                  }
+                ],
+                "cacheSubnetGroupName": "sysmon-subgraph-generator-subnetgroup"
+              }
+            }
+          },
+          "sysmon-subgraph-generator-securitygroup": {
+            "id": "sysmon-subgraph-generator-securitygroup",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generator-securitygroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generator-securitygroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "sysmon-subgraph-generator/sysmon-subgraph-generator-securitygroup",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "vpcId": {
+                      "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "sysmon-subgraph-generator-cachecluster": {
+            "id": "sysmon-subgraph-generator-cachecluster",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generator-cachecluster",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::ElastiCache::CacheCluster",
+              "aws:cdk:cloudformation:props": {
+                "cacheNodeType": "cache.t2.small",
+                "engine": "redis",
+                "numCacheNodes": 1,
+                "autoMinorVersionUpgrade": true,
+                "cacheSubnetGroupName": "sysmon-subgraph-generator-subnetgroup",
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::GetAtt": [
+                      "sysmonsubgraphgeneratorsecuritygroup27A1E680",
+                      "GroupId"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "sysmon-subgraph-generatorsource_topic": {
+            "id": "sysmon-subgraph-generatorsource_topic",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorsource_topic"
+          },
+          "sysmon-subgraph-generatorsource_bucket": {
+            "id": "sysmon-subgraph-generatorsource_bucket",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorsource_bucket"
+          },
+          "GeneratedUnidGraphsBucked": {
+            "id": "GeneratedUnidGraphsBucked",
+            "path": "sysmon-subgraph-generator/GeneratedUnidGraphsBucked"
+          },
+          "sysmon-subgraph-generatorVpc": {
+            "id": "sysmon-subgraph-generatorVpc",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorVpc",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorVpc/PublicSubnet1"
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorVpc/PublicSubnet2"
+              },
+              "PrivateSubnet1": {
+                "id": "PrivateSubnet1",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorVpc/PrivateSubnet1"
+              },
+              "PrivateSubnet2": {
+                "id": "PrivateSubnet2",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorVpc/PrivateSubnet2"
+              }
+            }
+          },
+          "source_queuesysmon-subgraph-generator": {
+            "id": "source_queuesysmon-subgraph-generator",
+            "path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
+                  "aws:cdk:cloudformation:props": {}
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SQS::QueuePolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sqs:SendMessage",
+                              "Condition": {
+                                "ArnEquals": {
+                                  "aws:SourceArn": "arn:aws:sns:us-east-1:251074890252:sysmon-log-topic"
+                                }
+                              },
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "sns.amazonaws.com"
+                              },
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "sourcequeuesysmonsubgraphgenerator4ECFD90E",
+                                  "Arn"
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "queues": [
+                          {
+                            "Ref": "sourcequeuesysmonsubgraphgenerator4ECFD90E"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "sysmonsubgraphgeneratorsysmonsubgraphgeneratorsourcetopic4D62AF3B": {
+                "id": "sysmonsubgraphgeneratorsysmonsubgraphgeneratorsourcetopic4D62AF3B",
+                "path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/sysmonsubgraphgeneratorsysmonsubgraphgeneratorsourcetopic4D62AF3B",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/sysmonsubgraphgeneratorsysmonsubgraphgeneratorsourcetopic4D62AF3B/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                      "aws:cdk:cloudformation:props": {
+                        "protocol": "sqs",
+                        "topicArn": "arn:aws:sns:us-east-1:251074890252:sysmon-log-topic",
+                        "endpoint": {
+                          "Fn::GetAtt": [
+                            "sourcequeuesysmonsubgraphgenerator4ECFD90E",
+                            "Arn"
+                          ]
+                        },
+                        "rawMessageDelivery": true,
+                        "region": "us-east-1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "sysmon-subgraph-generatorservice": {
+            "id": "sysmon-subgraph-generatorservice",
+            "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          },
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:GetObject",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":s3:::grapl-sysmon-log-bucket"
+                                      ]
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": [
+                                    "s3:DeleteObject*",
+                                    "s3:PutObject*",
+                                    "s3:Abort*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":s3:::grapl-unid-subgraphs-generated-bucket"
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":s3:::grapl-unid-subgraphs-generated-bucket/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "sysmonsubgraphgeneratorserviceServiceRoleDefaultPolicyE99E9CF2",
+                            "roles": [
+                              {
+                                "Ref": "sysmonsubgraphgeneratorserviceServiceRoleD54530BA"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/Code/Stage"
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/Code/AssetBucket"
+                  }
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "Automatic security group for Lambda Function sysmonsubgraphgeneratorsysmonsubgraphgeneratorservice5A547600",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "vpcId": "vpc-0ef284d90191e2e9b"
+                      }
+                    }
+                  }
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Ref": "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3Bucket839F63B0"
+                      },
+                      "s3Key": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            {
+                              "Fn::Select": [
+                                0,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3VersionKeyC001FB0F"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Fn::Select": [
+                                1,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3VersionKeyC001FB0F"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "handler": "sysmon-subgraph-generator.lambda_handler",
+                    "role": {
+                      "Fn::GetAtt": [
+                        "sysmonsubgraphgeneratorserviceServiceRoleD54530BA",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "provided",
+                    "environment": {
+                      "variables": {
+                        "QUEUE_URL": {
+                          "Ref": "sourcequeuesysmonsubgraphgenerator4ECFD90E"
+                        },
+                        "SOURCE_BUCKET": "grapl-sysmon-log-bucket",
+                        "DEST_BUCKET": "grapl-unid-subgraphs-generated-bucket",
+                        "EVENT_CACHE_ADDR": {
+                          "Fn::GetAtt": [
+                            "sysmonsubgraphgeneratorcachecluster",
+                            "RedisEndpoint.Address"
+                          ]
+                        }
+                      }
+                    },
+                    "vpcConfig": {
+                      "subnetIds": [
+                        "subnet-0d5686d9c98263bc9",
+                        "subnet-0a64c2696a3229017"
+                      ],
+                      "securityGroupIds": [
+                        {
+                          "Fn::GetAtt": [
+                            "sysmonsubgraphgeneratorserviceSecurityGroupFB2EF896",
+                            "GroupId"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "AssetParameters": {
+            "id": "AssetParameters",
+            "path": "sysmon-subgraph-generator/AssetParameters",
+            "children": {
+              "84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30": {
+                "id": "84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30",
+                "path": "sysmon-subgraph-generator/AssetParameters/84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30",
+                "children": {
+                  "S3Bucket": {
+                    "id": "S3Bucket",
+                    "path": "sysmon-subgraph-generator/AssetParameters/84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30/S3Bucket"
+                  },
+                  "S3VersionKey": {
+                    "id": "S3VersionKey",
+                    "path": "sysmon-subgraph-generator/AssetParameters/84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30/S3VersionKey"
+                  },
+                  "ArtifactHash": {
+                    "id": "ArtifactHash",
+                    "path": "sysmon-subgraph-generator/AssetParameters/84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30/ArtifactHash"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "mastergraphcluster-stack": {
+        "id": "mastergraphcluster-stack",
+        "path": "mastergraphcluster-stack",
+        "children": {
+          "mastergraphcluster-EcsCluster": {
+            "id": "mastergraphcluster-EcsCluster",
+            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Cluster",
+                  "aws:cdk:cloudformation:props": {}
+                }
+              },
+              "DefaultServiceDiscoveryNamespace": {
+                "id": "DefaultServiceDiscoveryNamespace",
+                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/DefaultServiceDiscoveryNamespace",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/DefaultServiceDiscoveryNamespace/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ServiceDiscovery::PrivateDnsNamespace",
+                      "aws:cdk:cloudformation:props": {
+                        "name": "mastergraphcluster.grapl",
+                        "vpc": {
+                          "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "mastergraphclusterZeroGroupCapacity": {
+                "id": "mastergraphclusterZeroGroupCapacity",
+                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity",
+                "children": {
+                  "InstanceSecurityGroup": {
+                    "id": "InstanceSecurityGroup",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceSecurityGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceSecurityGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "groupDescription": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceSecurityGroup",
+                            "securityGroupEgress": [
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "description": "Allow all outbound traffic by default",
+                                "ipProtocol": "-1"
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "Name",
+                                "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity"
+                              }
+                            ],
+                            "vpcId": {
+                              "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+                            }
+                          }
+                        }
+                      },
+                      "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS": {
+                        "id": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceSecurityGroup/from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                          "aws:cdk:cloudformation:props": {
+                            "ipProtocol": "tcp",
+                            "description": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS",
+                            "fromPort": 0,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroup19243BEA",
+                                "GroupId"
+                              ]
+                            },
+                            "sourceSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroup19243BEA",
+                                "GroupId"
+                              ]
+                            },
+                            "toPort": 65535
+                          }
+                        }
+                      },
+                      "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS": {
+                        "id": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceSecurityGroup/from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                          "aws:cdk:cloudformation:props": {
+                            "ipProtocol": "tcp",
+                            "description": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS",
+                            "fromPort": 0,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroup19243BEA",
+                                "GroupId"
+                              ]
+                            },
+                            "sourceSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup646CC376",
+                                "GroupId"
+                              ]
+                            },
+                            "toPort": 65535
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "InstanceRole": {
+                    "id": "InstanceRole",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "ec2.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "tags": [
+                              {
+                                "key": "Name",
+                                "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "ecs:CreateCluster",
+                                        "ecs:DeregisterContainerInstance",
+                                        "ecs:DiscoverPollEndpoint",
+                                        "ecs:Poll",
+                                        "ecs:RegisterContainerInstance",
+                                        "ecs:StartTelemetrySession",
+                                        "ecs:Submit*",
+                                        "ecr:GetAuthorizationToken",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceRoleDefaultPolicy7C26D9F2",
+                                "roles": [
+                                  {
+                                    "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceRoleB8400054"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "InstanceProfile": {
+                    "id": "InstanceProfile",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/InstanceProfile",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
+                      "aws:cdk:cloudformation:props": {
+                        "roles": [
+                          {
+                            "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceRoleB8400054"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "LaunchConfig": {
+                    "id": "LaunchConfig",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LaunchConfig",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AutoScaling::LaunchConfiguration",
+                      "aws:cdk:cloudformation:props": {
+                        "imageId": {
+                          "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter"
+                        },
+                        "instanceType": "t3a.small",
+                        "iamInstanceProfile": {
+                          "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceProfileFFFA70AE"
+                        },
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroup19243BEA",
+                              "GroupId"
+                            ]
+                          }
+                        ],
+                        "userData": {
+                          "Fn::Base64": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "#!/bin/bash\necho ECS_CLUSTER=",
+                                {
+                                  "Ref": "mastergraphclusterEcsCluster77253BF4"
+                                },
+                                " >> /etc/ecs/ecs.config\nsudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP\nsudo service iptables save\necho ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config"
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ASG": {
+                    "id": "ASG",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/ASG",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "maxSize": "1",
+                        "minSize": "1",
+                        "desiredCapacity": "1",
+                        "launchConfigurationName": {
+                          "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLaunchConfigF9F390C0"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity",
+                            "propagateAtLaunch": true
+                          }
+                        ],
+                        "vpcZoneIdentifier": [
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet1SubnetC6852983C267B947"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet2SubnetDAF9D2E0F9C618F3"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet3SubnetC625644E86F72BC2"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "DrainECSHook": {
+                    "id": "DrainECSHook",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook",
+                    "children": {
+                      "Function": {
+                        "id": "Function",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function",
+                        "children": {
+                          "ServiceRole": {
+                            "id": "ServiceRole",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/ServiceRole",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/ServiceRole/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                                  "aws:cdk:cloudformation:props": {
+                                    "assumeRolePolicyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": "sts:AssumeRole",
+                                          "Effect": "Allow",
+                                          "Principal": {
+                                            "Service": "lambda.amazonaws.com"
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "managedPolicyArns": [
+                                      {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                          ]
+                                        ]
+                                      }
+                                    ],
+                                    "tags": [
+                                      {
+                                        "key": "Name",
+                                        "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "DefaultPolicy": {
+                                "id": "DefaultPolicy",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/ServiceRole/DefaultPolicy",
+                                "children": {
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/ServiceRole/DefaultPolicy/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                      "aws:cdk:cloudformation:props": {
+                                        "policyDocument": {
+                                          "Statement": [
+                                            {
+                                              "Action": [
+                                                "ec2:DescribeInstances",
+                                                "ec2:DescribeInstanceAttribute",
+                                                "ec2:DescribeInstanceStatus",
+                                                "ec2:DescribeHosts"
+                                              ],
+                                              "Effect": "Allow",
+                                              "Resource": "*"
+                                            },
+                                            {
+                                              "Action": "autoscaling:CompleteLifecycleAction",
+                                              "Effect": "Allow",
+                                              "Resource": {
+                                                "Fn::Join": [
+                                                  "",
+                                                  [
+                                                    "arn:",
+                                                    {
+                                                      "Ref": "AWS::Partition"
+                                                    },
+                                                    ":autoscaling:us-east-1:251074890252:autoScalingGroup:*:autoScalingGroupName/",
+                                                    {
+                                                      "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityASGB05B1989"
+                                                    }
+                                                  ]
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "Action": [
+                                                "ecs:DescribeContainerInstances",
+                                                "ecs:DescribeTasks"
+                                              ],
+                                              "Effect": "Allow",
+                                              "Resource": "*"
+                                            },
+                                            {
+                                              "Action": [
+                                                "ecs:ListContainerInstances",
+                                                "ecs:SubmitContainerStateChange",
+                                                "ecs:SubmitTaskStateChange"
+                                              ],
+                                              "Effect": "Allow",
+                                              "Resource": {
+                                                "Fn::GetAtt": [
+                                                  "mastergraphclusterEcsCluster77253BF4",
+                                                  "Arn"
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "Action": [
+                                                "ecs:UpdateContainerInstancesState",
+                                                "ecs:ListTasks"
+                                              ],
+                                              "Condition": {
+                                                "ArnEquals": {
+                                                  "ecs:cluster": {
+                                                    "Fn::GetAtt": [
+                                                      "mastergraphclusterEcsCluster77253BF4",
+                                                      "Arn"
+                                                    ]
+                                                  }
+                                                }
+                                              },
+                                              "Effect": "Allow",
+                                              "Resource": "*"
+                                            }
+                                          ],
+                                          "Version": "2012-10-17"
+                                        },
+                                        "policyName": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityDrainECSHookFunctionServiceRoleDefaultPolicy1606E026",
+                                        "roles": [
+                                          {
+                                            "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityDrainECSHookFunctionServiceRoleD08AFFB7"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                              "aws:cdk:cloudformation:props": {
+                                "code": {
+                                  "zipFile": "import boto3, json, os, time\n\necs = boto3.client('ecs')\nautoscaling = boto3.client('autoscaling')\n\n\ndef lambda_handler(event, context):\n  print(json.dumps(event))\n  cluster = os.environ['CLUSTER']\n  snsTopicArn = event['Records'][0]['Sns']['TopicArn']\n  lifecycle_event = json.loads(event['Records'][0]['Sns']['Message'])\n  instance_id = lifecycle_event.get('EC2InstanceId')\n  if not instance_id:\n    print('Got event without EC2InstanceId: %s', json.dumps(event))\n    return\n\n  instance_arn = container_instance_arn(cluster, instance_id)\n  print('Instance %s has container instance ARN %s' % (lifecycle_event['EC2InstanceId'], instance_arn))\n\n  if not instance_arn:\n    return\n\n  while has_tasks(cluster, instance_arn):\n    time.sleep(10)\n\n  try:\n    print('Terminating instance %s' % instance_id)\n    autoscaling.complete_lifecycle_action(\n        LifecycleActionResult='CONTINUE',\n        **pick(lifecycle_event, 'LifecycleHookName', 'LifecycleActionToken', 'AutoScalingGroupName'))\n  except Exception as e:\n    # Lifecycle action may have already completed.\n    print(str(e))\n\n\ndef container_instance_arn(cluster, instance_id):\n  \"\"\"Turn an instance ID into a container instance ARN.\"\"\"\n  arns = ecs.list_container_instances(cluster=cluster, filter='ec2InstanceId==' + instance_id)['containerInstanceArns']\n  if not arns:\n    return None\n  return arns[0]\n\n\ndef has_tasks(cluster, instance_arn):\n  \"\"\"Return True if the instance is running tasks for the given cluster.\"\"\"\n  instances = ecs.describe_container_instances(cluster=cluster, containerInstances=[instance_arn])['containerInstances']\n  if not instances:\n    return False\n  instance = instances[0]\n\n  if instance['status'] == 'ACTIVE':\n    # Start draining, then try again later\n    set_container_instance_to_draining(cluster, instance_arn)\n    return True\n\n  tasks = instance['runningTasksCount'] + instance['pendingTasksCount']\n  print('Instance %s has %s tasks' % (instance_arn, tasks))\n\n  return tasks > 0\n\n\ndef set_container_instance_to_draining(cluster, instance_arn):\n  ecs.update_container_instances_state(\n      cluster=cluster,\n      containerInstances=[instance_arn], status='DRAINING')\n\n\ndef pick(dct, *keys):\n  \"\"\"Pick a subset of a dict.\"\"\"\n  return {k: v for k, v in dct.items() if k in keys}\n"
+                                },
+                                "handler": "index.lambda_handler",
+                                "role": {
+                                  "Fn::GetAtt": [
+                                    "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityDrainECSHookFunctionServiceRoleD08AFFB7",
+                                    "Arn"
+                                  ]
+                                },
+                                "runtime": "python3.6",
+                                "environment": {
+                                  "variables": {
+                                    "CLUSTER": {
+                                      "Ref": "mastergraphclusterEcsCluster77253BF4"
+                                    }
+                                  }
+                                },
+                                "tags": [
+                                  {
+                                    "key": "Name",
+                                    "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity"
+                                  }
+                                ],
+                                "timeout": 310
+                              }
+                            }
+                          },
+                          "AllowInvoke:mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopicE8934AEB": {
+                            "id": "AllowInvoke:mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopicE8934AEB",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/AllowInvoke:mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopicE8934AEB",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityDrainECSHookFunction46B3042C",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "sns.amazonaws.com",
+                                "sourceArn": {
+                                  "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopic5127E9BC"
+                                }
+                              }
+                            }
+                          },
+                          "Topic": {
+                            "id": "Topic",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/Topic",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/DrainECSHook/Function/Topic/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                                  "aws:cdk:cloudformation:props": {
+                                    "protocol": "lambda",
+                                    "topicArn": {
+                                      "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopic5127E9BC"
+                                    },
+                                    "endpoint": {
+                                      "Fn::GetAtt": [
+                                        "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityDrainECSHookFunction46B3042C",
+                                        "Arn"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "LifecycleHookDrainHook": {
+                    "id": "LifecycleHookDrainHook",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook",
+                    "children": {
+                      "Role": {
+                        "id": "Role",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Role",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Role/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "Service": "autoscaling.amazonaws.com"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "tags": [
+                                  {
+                                    "key": "Name",
+                                    "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity"
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Role/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Role/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": "sns:Publish",
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopic5127E9BC"
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookRoleDefaultPolicy5CC440A4",
+                                    "roles": [
+                                      {
+                                        "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookRole4A429E18"
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Topic": {
+                        "id": "Topic",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Topic",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Topic/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                              "aws:cdk:cloudformation:props": {
+                                "tags": [
+                                  {
+                                    "key": "Name",
+                                    "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterZeroGroupCapacity/LifecycleHookDrainHook/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AutoScaling::LifecycleHook",
+                          "aws:cdk:cloudformation:props": {
+                            "autoScalingGroupName": {
+                              "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityASGB05B1989"
+                            },
+                            "lifecycleTransition": "autoscaling:EC2_INSTANCE_TERMINATING",
+                            "defaultResult": "CONTINUE",
+                            "heartbeatTimeout": 300,
+                            "notificationTargetArn": {
+                              "Ref": "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookTopic5127E9BC"
+                            },
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityLifecycleHookDrainHookRole4A429E18",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "mastergraphclusterAlphaClusterCapacity": {
+                "id": "mastergraphclusterAlphaClusterCapacity",
+                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity",
+                "children": {
+                  "InstanceSecurityGroup": {
+                    "id": "InstanceSecurityGroup",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceSecurityGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceSecurityGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "groupDescription": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceSecurityGroup",
+                            "securityGroupEgress": [
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "description": "Allow all outbound traffic by default",
+                                "ipProtocol": "-1"
+                              }
+                            ],
+                            "tags": [
+                              {
+                                "key": "Name",
+                                "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity"
+                              }
+                            ],
+                            "vpcId": {
+                              "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+                            }
+                          }
+                        }
+                      },
+                      "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS": {
+                        "id": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceSecurityGroup/from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                          "aws:cdk:cloudformation:props": {
+                            "ipProtocol": "tcp",
+                            "description": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroupBE8E2333:ALL PORTS",
+                            "fromPort": 0,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup646CC376",
+                                "GroupId"
+                              ]
+                            },
+                            "sourceSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterZeroGroupCapacityInstanceSecurityGroup19243BEA",
+                                "GroupId"
+                              ]
+                            },
+                            "toPort": 65535
+                          }
+                        }
+                      },
+                      "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS": {
+                        "id": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceSecurityGroup/from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                          "aws:cdk:cloudformation:props": {
+                            "ipProtocol": "tcp",
+                            "description": "from mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup0ED5D6C4:ALL PORTS",
+                            "fromPort": 0,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup646CC376",
+                                "GroupId"
+                              ]
+                            },
+                            "sourceSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup646CC376",
+                                "GroupId"
+                              ]
+                            },
+                            "toPort": 65535
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "InstanceRole": {
+                    "id": "InstanceRole",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "ec2.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "tags": [
+                              {
+                                "key": "Name",
+                                "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "ecs:CreateCluster",
+                                        "ecs:DeregisterContainerInstance",
+                                        "ecs:DiscoverPollEndpoint",
+                                        "ecs:Poll",
+                                        "ecs:RegisterContainerInstance",
+                                        "ecs:StartTelemetrySession",
+                                        "ecs:Submit*",
+                                        "ecr:GetAuthorizationToken",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceRoleDefaultPolicyA170B07F",
+                                "roles": [
+                                  {
+                                    "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceRole5DB25E0E"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "InstanceProfile": {
+                    "id": "InstanceProfile",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/InstanceProfile",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
+                      "aws:cdk:cloudformation:props": {
+                        "roles": [
+                          {
+                            "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceRole5DB25E0E"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "LaunchConfig": {
+                    "id": "LaunchConfig",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LaunchConfig",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AutoScaling::LaunchConfiguration",
+                      "aws:cdk:cloudformation:props": {
+                        "imageId": {
+                          "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter"
+                        },
+                        "instanceType": "t3a.medium",
+                        "iamInstanceProfile": {
+                          "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceProfile91635556"
+                        },
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityInstanceSecurityGroup646CC376",
+                              "GroupId"
+                            ]
+                          }
+                        ],
+                        "userData": {
+                          "Fn::Base64": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "#!/bin/bash\necho ECS_CLUSTER=",
+                                {
+                                  "Ref": "mastergraphclusterEcsCluster77253BF4"
+                                },
+                                " >> /etc/ecs/ecs.config\nsudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP\nsudo service iptables save\necho ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config"
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ASG": {
+                    "id": "ASG",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/ASG",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "maxSize": "1",
+                        "minSize": "1",
+                        "desiredCapacity": "1",
+                        "launchConfigurationName": {
+                          "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLaunchConfig9FB4F639"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity",
+                            "propagateAtLaunch": true
+                          }
+                        ],
+                        "vpcZoneIdentifier": [
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet1SubnetC6852983C267B947"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet2SubnetDAF9D2E0F9C618F3"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet3SubnetC625644E86F72BC2"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "DrainECSHook": {
+                    "id": "DrainECSHook",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook",
+                    "children": {
+                      "Function": {
+                        "id": "Function",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function",
+                        "children": {
+                          "ServiceRole": {
+                            "id": "ServiceRole",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/ServiceRole",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/ServiceRole/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                                  "aws:cdk:cloudformation:props": {
+                                    "assumeRolePolicyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": "sts:AssumeRole",
+                                          "Effect": "Allow",
+                                          "Principal": {
+                                            "Service": "lambda.amazonaws.com"
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "managedPolicyArns": [
+                                      {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                          ]
+                                        ]
+                                      }
+                                    ],
+                                    "tags": [
+                                      {
+                                        "key": "Name",
+                                        "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity"
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "DefaultPolicy": {
+                                "id": "DefaultPolicy",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/ServiceRole/DefaultPolicy",
+                                "children": {
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/ServiceRole/DefaultPolicy/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                      "aws:cdk:cloudformation:props": {
+                                        "policyDocument": {
+                                          "Statement": [
+                                            {
+                                              "Action": [
+                                                "ec2:DescribeInstances",
+                                                "ec2:DescribeInstanceAttribute",
+                                                "ec2:DescribeInstanceStatus",
+                                                "ec2:DescribeHosts"
+                                              ],
+                                              "Effect": "Allow",
+                                              "Resource": "*"
+                                            },
+                                            {
+                                              "Action": "autoscaling:CompleteLifecycleAction",
+                                              "Effect": "Allow",
+                                              "Resource": {
+                                                "Fn::Join": [
+                                                  "",
+                                                  [
+                                                    "arn:",
+                                                    {
+                                                      "Ref": "AWS::Partition"
+                                                    },
+                                                    ":autoscaling:us-east-1:251074890252:autoScalingGroup:*:autoScalingGroupName/",
+                                                    {
+                                                      "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityASGC586CA8E"
+                                                    }
+                                                  ]
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "Action": [
+                                                "ecs:DescribeContainerInstances",
+                                                "ecs:DescribeTasks"
+                                              ],
+                                              "Effect": "Allow",
+                                              "Resource": "*"
+                                            },
+                                            {
+                                              "Action": [
+                                                "ecs:ListContainerInstances",
+                                                "ecs:SubmitContainerStateChange",
+                                                "ecs:SubmitTaskStateChange"
+                                              ],
+                                              "Effect": "Allow",
+                                              "Resource": {
+                                                "Fn::GetAtt": [
+                                                  "mastergraphclusterEcsCluster77253BF4",
+                                                  "Arn"
+                                                ]
+                                              }
+                                            },
+                                            {
+                                              "Action": [
+                                                "ecs:UpdateContainerInstancesState",
+                                                "ecs:ListTasks"
+                                              ],
+                                              "Condition": {
+                                                "ArnEquals": {
+                                                  "ecs:cluster": {
+                                                    "Fn::GetAtt": [
+                                                      "mastergraphclusterEcsCluster77253BF4",
+                                                      "Arn"
+                                                    ]
+                                                  }
+                                                }
+                                              },
+                                              "Effect": "Allow",
+                                              "Resource": "*"
+                                            }
+                                          ],
+                                          "Version": "2012-10-17"
+                                        },
+                                        "policyName": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityDrainECSHookFunctionServiceRoleDefaultPolicy67CA898C",
+                                        "roles": [
+                                          {
+                                            "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityDrainECSHookFunctionServiceRole62FE86B2"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                              "aws:cdk:cloudformation:props": {
+                                "code": {
+                                  "zipFile": "import boto3, json, os, time\n\necs = boto3.client('ecs')\nautoscaling = boto3.client('autoscaling')\n\n\ndef lambda_handler(event, context):\n  print(json.dumps(event))\n  cluster = os.environ['CLUSTER']\n  snsTopicArn = event['Records'][0]['Sns']['TopicArn']\n  lifecycle_event = json.loads(event['Records'][0]['Sns']['Message'])\n  instance_id = lifecycle_event.get('EC2InstanceId')\n  if not instance_id:\n    print('Got event without EC2InstanceId: %s', json.dumps(event))\n    return\n\n  instance_arn = container_instance_arn(cluster, instance_id)\n  print('Instance %s has container instance ARN %s' % (lifecycle_event['EC2InstanceId'], instance_arn))\n\n  if not instance_arn:\n    return\n\n  while has_tasks(cluster, instance_arn):\n    time.sleep(10)\n\n  try:\n    print('Terminating instance %s' % instance_id)\n    autoscaling.complete_lifecycle_action(\n        LifecycleActionResult='CONTINUE',\n        **pick(lifecycle_event, 'LifecycleHookName', 'LifecycleActionToken', 'AutoScalingGroupName'))\n  except Exception as e:\n    # Lifecycle action may have already completed.\n    print(str(e))\n\n\ndef container_instance_arn(cluster, instance_id):\n  \"\"\"Turn an instance ID into a container instance ARN.\"\"\"\n  arns = ecs.list_container_instances(cluster=cluster, filter='ec2InstanceId==' + instance_id)['containerInstanceArns']\n  if not arns:\n    return None\n  return arns[0]\n\n\ndef has_tasks(cluster, instance_arn):\n  \"\"\"Return True if the instance is running tasks for the given cluster.\"\"\"\n  instances = ecs.describe_container_instances(cluster=cluster, containerInstances=[instance_arn])['containerInstances']\n  if not instances:\n    return False\n  instance = instances[0]\n\n  if instance['status'] == 'ACTIVE':\n    # Start draining, then try again later\n    set_container_instance_to_draining(cluster, instance_arn)\n    return True\n\n  tasks = instance['runningTasksCount'] + instance['pendingTasksCount']\n  print('Instance %s has %s tasks' % (instance_arn, tasks))\n\n  return tasks > 0\n\n\ndef set_container_instance_to_draining(cluster, instance_arn):\n  ecs.update_container_instances_state(\n      cluster=cluster,\n      containerInstances=[instance_arn], status='DRAINING')\n\n\ndef pick(dct, *keys):\n  \"\"\"Pick a subset of a dict.\"\"\"\n  return {k: v for k, v in dct.items() if k in keys}\n"
+                                },
+                                "handler": "index.lambda_handler",
+                                "role": {
+                                  "Fn::GetAtt": [
+                                    "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityDrainECSHookFunctionServiceRole62FE86B2",
+                                    "Arn"
+                                  ]
+                                },
+                                "runtime": "python3.6",
+                                "environment": {
+                                  "variables": {
+                                    "CLUSTER": {
+                                      "Ref": "mastergraphclusterEcsCluster77253BF4"
+                                    }
+                                  }
+                                },
+                                "tags": [
+                                  {
+                                    "key": "Name",
+                                    "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity"
+                                  }
+                                ],
+                                "timeout": 310
+                              }
+                            }
+                          },
+                          "AllowInvoke:mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic8F8E6E2A": {
+                            "id": "AllowInvoke:mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic8F8E6E2A",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/AllowInvoke:mastergraphclusterstackmastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic8F8E6E2A",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                              "aws:cdk:cloudformation:props": {
+                                "action": "lambda:InvokeFunction",
+                                "functionName": {
+                                  "Fn::GetAtt": [
+                                    "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityDrainECSHookFunctionD7833A14",
+                                    "Arn"
+                                  ]
+                                },
+                                "principal": "sns.amazonaws.com",
+                                "sourceArn": {
+                                  "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic13212320"
+                                }
+                              }
+                            }
+                          },
+                          "Topic": {
+                            "id": "Topic",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/Topic",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/DrainECSHook/Function/Topic/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                                  "aws:cdk:cloudformation:props": {
+                                    "protocol": "lambda",
+                                    "topicArn": {
+                                      "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic13212320"
+                                    },
+                                    "endpoint": {
+                                      "Fn::GetAtt": [
+                                        "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityDrainECSHookFunctionD7833A14",
+                                        "Arn"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "LifecycleHookDrainHook": {
+                    "id": "LifecycleHookDrainHook",
+                    "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook",
+                    "children": {
+                      "Role": {
+                        "id": "Role",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Role",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Role/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "Service": "autoscaling.amazonaws.com"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "tags": [
+                                  {
+                                    "key": "Name",
+                                    "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity"
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Role/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Role/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": "sns:Publish",
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic13212320"
+                                          }
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookRoleDefaultPolicyF3D22B0F",
+                                    "roles": [
+                                      {
+                                        "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookRole3DA4BEFD"
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Topic": {
+                        "id": "Topic",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Topic",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Topic/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                              "aws:cdk:cloudformation:props": {
+                                "tags": [
+                                  {
+                                    "key": "Name",
+                                    "value": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/mastergraphcluster-EcsCluster/mastergraphclusterAlphaClusterCapacity/LifecycleHookDrainHook/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::AutoScaling::LifecycleHook",
+                          "aws:cdk:cloudformation:props": {
+                            "autoScalingGroupName": {
+                              "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityASGC586CA8E"
+                            },
+                            "lifecycleTransition": "autoscaling:EC2_INSTANCE_TERMINATING",
+                            "defaultResult": "CONTINUE",
+                            "heartbeatTimeout": 300,
+                            "notificationTargetArn": {
+                              "Ref": "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookTopic13212320"
+                            },
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "mastergraphclusterEcsClustermastergraphclusterAlphaClusterCapacityLifecycleHookDrainHookRole3DA4BEFD",
+                                "Arn"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter": {
+            "id": "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter",
+            "path": "mastergraphcluster-stack/SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118.Parameter"
+          },
+          "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118": {
+            "id": "SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118",
+            "path": "mastergraphcluster-stack/SsmParameterValue:--aws--service--ecs--optimized-ami--amazon-linux-2--recommended--image_id:C96584B6-F00A-464E-AD19-53AFF4B05118"
+          },
+          "zero0": {
+            "id": "zero0",
+            "path": "mastergraphcluster-stack/zero0",
+            "children": {
+              "TaskRole": {
+                "id": "TaskRole",
+                "path": "mastergraphcluster-stack/zero0/TaskRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/zero0/TaskRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "mastergraphcluster-stack/zero0/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "command": [
+                          "dgraph",
+                          "zero",
+                          "--my=zero0.mastergraphcluster.grapl:5080",
+                          "--replicas=3",
+                          "--idx=1",
+                          "--alsologtostderr"
+                        ],
+                        "essential": true,
+                        "image": "dgraph/dgraph:1.1.1",
+                        "memoryReservation": 1024,
+                        "name": "zero0mastergraphclusterContainer",
+                        "logConfiguration": {
+                          "logDriver": "awslogs",
+                          "options": {
+                            "awslogs-group": {
+                              "Ref": "zero0zero0mastergraphclusterContainerLogGroup786869D2"
+                            },
+                            "awslogs-stream-prefix": "ecsmastergraphclusterzero0",
+                            "awslogs-region": "us-east-1"
+                          }
+                        }
+                      }
+                    ],
+                    "executionRoleArn": {
+                      "Fn::GetAtt": [
+                        "zero0ExecutionRoleA355877C",
+                        "Arn"
+                      ]
+                    },
+                    "family": "mastergraphclusterstackzero06BA3B3C2",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "EC2"
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "zero0TaskRoleEE59431D",
+                        "Arn"
+                      ]
+                    }
+                  }
+                }
+              },
+              "zero0mastergraphclusterContainer": {
+                "id": "zero0mastergraphclusterContainer",
+                "path": "mastergraphcluster-stack/zero0/zero0mastergraphclusterContainer",
+                "children": {
+                  "LogGroup": {
+                    "id": "LogGroup",
+                    "path": "mastergraphcluster-stack/zero0/zero0mastergraphclusterContainer/LogGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/zero0/zero0mastergraphclusterContainer/LogGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                          "aws:cdk:cloudformation:props": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "ExecutionRole": {
+                "id": "ExecutionRole",
+                "path": "mastergraphcluster-stack/zero0/ExecutionRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/zero0/ExecutionRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "mastergraphcluster-stack/zero0/ExecutionRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/zero0/ExecutionRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "zero0zero0mastergraphclusterContainerLogGroup786869D2",
+                                      "Arn"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "zero0ExecutionRoleDefaultPolicy62EFE539",
+                            "roles": [
+                              {
+                                "Ref": "zero0ExecutionRoleA355877C"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "zero0Service": {
+            "id": "zero0Service",
+            "path": "mastergraphcluster-stack/zero0Service",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "mastergraphcluster-stack/zero0Service/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "mastergraphclusterEcsCluster77253BF4"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 50
+                    },
+                    "desiredCount": 1,
+                    "enableEcsManagedTags": false,
+                    "launchType": "EC2",
+                    "networkConfiguration": {
+                      "awsvpcConfiguration": {
+                        "assignPublicIp": "DISABLED",
+                        "subnets": [
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet1SubnetC6852983C267B947"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet2SubnetDAF9D2E0F9C618F3"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet3SubnetC625644E86F72BC2"
+                          }
+                        ],
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "zero0ServiceSecurityGroup3E01EBC7",
+                              "GroupId"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "schedulingStrategy": "REPLICA",
+                    "serviceRegistries": [
+                      {
+                        "registryArn": {
+                          "Fn::GetAtt": [
+                            "zero0ServiceCloudmapService6C0F1AC1",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    ],
+                    "taskDefinition": {
+                      "Ref": "zero08F294ACF"
+                    }
+                  }
+                }
+              },
+              "CloudmapService": {
+                "id": "CloudmapService",
+                "path": "mastergraphcluster-stack/zero0Service/CloudmapService",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/zero0Service/CloudmapService/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ServiceDiscovery::Service",
+                      "aws:cdk:cloudformation:props": {
+                        "dnsConfig": {
+                          "dnsRecords": [
+                            {
+                              "type": "A",
+                              "ttl": 60
+                            }
+                          ],
+                          "namespaceId": {
+                            "Fn::GetAtt": [
+                              "mastergraphclusterEcsClusterDefaultServiceDiscoveryNamespace826A7C54",
+                              "Id"
+                            ]
+                          },
+                          "routingPolicy": "MULTIVALUE"
+                        },
+                        "healthCheckCustomConfig": {
+                          "failureThreshold": 1
+                        },
+                        "name": "zero0",
+                        "namespaceId": {
+                          "Fn::GetAtt": [
+                            "mastergraphclusterEcsClusterDefaultServiceDiscoveryNamespace826A7C54",
+                            "Id"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "mastergraphcluster-stack/zero0Service/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/zero0Service/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "mastergraphcluster-stack/zero0Service/SecurityGroup",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "securityGroupIngress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "ipProtocol": "tcp",
+                            "fromPort": 0,
+                            "toPort": 65535,
+                            "description": "from 0.0.0.0/0:ALL PORTS"
+                          }
+                        ],
+                        "vpcId": {
+                          "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "alpha0": {
+            "id": "alpha0",
+            "path": "mastergraphcluster-stack/alpha0",
+            "children": {
+              "TaskRole": {
+                "id": "TaskRole",
+                "path": "mastergraphcluster-stack/alpha0/TaskRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/alpha0/TaskRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "mastergraphcluster-stack/alpha0/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "command": [
+                          "dgraph",
+                          "alpha",
+                          "--my=alpha0.mastergraphcluster.grapl:7080",
+                          "--lru_mb=1024",
+                          "--zero=$zero0.mastergraphcluster.grapl:5080",
+                          "--alsologtostderr"
+                        ],
+                        "essential": true,
+                        "image": "dgraph/dgraph:1.1.1",
+                        "memoryReservation": 2048,
+                        "name": "alpha0mastergraphclusterContainer",
+                        "logConfiguration": {
+                          "logDriver": "awslogs",
+                          "options": {
+                            "awslogs-group": {
+                              "Ref": "alpha0alpha0mastergraphclusterContainerLogGroupE978ADBD"
+                            },
+                            "awslogs-stream-prefix": "ecsmastergraphclusteralpha0",
+                            "awslogs-region": "us-east-1"
+                          }
+                        }
+                      }
+                    ],
+                    "executionRoleArn": {
+                      "Fn::GetAtt": [
+                        "alpha0ExecutionRole10945257",
+                        "Arn"
+                      ]
+                    },
+                    "family": "mastergraphclusterstackalpha01D481725",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "EC2"
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "alpha0TaskRoleD2789A69",
+                        "Arn"
+                      ]
+                    }
+                  }
+                }
+              },
+              "alpha0mastergraphclusterContainer": {
+                "id": "alpha0mastergraphclusterContainer",
+                "path": "mastergraphcluster-stack/alpha0/alpha0mastergraphclusterContainer",
+                "children": {
+                  "LogGroup": {
+                    "id": "LogGroup",
+                    "path": "mastergraphcluster-stack/alpha0/alpha0mastergraphclusterContainer/LogGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/alpha0/alpha0mastergraphclusterContainer/LogGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                          "aws:cdk:cloudformation:props": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "ExecutionRole": {
+                "id": "ExecutionRole",
+                "path": "mastergraphcluster-stack/alpha0/ExecutionRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/alpha0/ExecutionRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "ecs-tasks.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "mastergraphcluster-stack/alpha0/ExecutionRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "mastergraphcluster-stack/alpha0/ExecutionRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "alpha0alpha0mastergraphclusterContainerLogGroupE978ADBD",
+                                      "Arn"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "alpha0ExecutionRoleDefaultPolicy4D11427B",
+                            "roles": [
+                              {
+                                "Ref": "alpha0ExecutionRole10945257"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "alpha0Service": {
+            "id": "alpha0Service",
+            "path": "mastergraphcluster-stack/alpha0Service",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "mastergraphcluster-stack/alpha0Service/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "mastergraphclusterEcsCluster77253BF4"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 50
+                    },
+                    "desiredCount": 1,
+                    "enableEcsManagedTags": false,
+                    "launchType": "EC2",
+                    "networkConfiguration": {
+                      "awsvpcConfiguration": {
+                        "assignPublicIp": "DISABLED",
+                        "subnets": [
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet1SubnetC6852983C267B947"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet2SubnetDAF9D2E0F9C618F3"
+                          },
+                          {
+                            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet3SubnetC625644E86F72BC2"
+                          }
+                        ],
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "alpha0ServiceSecurityGroupF7B1AFC6",
+                              "GroupId"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "schedulingStrategy": "REPLICA",
+                    "serviceRegistries": [
+                      {
+                        "registryArn": {
+                          "Fn::GetAtt": [
+                            "alpha0ServiceCloudmapService9ABD0DC9",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    ],
+                    "taskDefinition": {
+                      "Ref": "alpha0CA0EDE27"
+                    }
+                  }
+                }
+              },
+              "CloudmapService": {
+                "id": "CloudmapService",
+                "path": "mastergraphcluster-stack/alpha0Service/CloudmapService",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/alpha0Service/CloudmapService/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ServiceDiscovery::Service",
+                      "aws:cdk:cloudformation:props": {
+                        "dnsConfig": {
+                          "dnsRecords": [
+                            {
+                              "type": "A",
+                              "ttl": 60
+                            }
+                          ],
+                          "namespaceId": {
+                            "Fn::GetAtt": [
+                              "mastergraphclusterEcsClusterDefaultServiceDiscoveryNamespace826A7C54",
+                              "Id"
+                            ]
+                          },
+                          "routingPolicy": "MULTIVALUE"
+                        },
+                        "healthCheckCustomConfig": {
+                          "failureThreshold": 1
+                        },
+                        "name": "alpha0",
+                        "namespaceId": {
+                          "Fn::GetAtt": [
+                            "mastergraphclusterEcsClusterDefaultServiceDiscoveryNamespace826A7C54",
+                            "Id"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "mastergraphcluster-stack/alpha0Service/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "mastergraphcluster-stack/alpha0Service/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "mastergraphcluster-stack/alpha0Service/SecurityGroup",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "securityGroupIngress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "ipProtocol": "tcp",
+                            "fromPort": 0,
+                            "toPort": 65535,
+                            "description": "from 0.0.0.0/0:ALL PORTS"
+                          }
+                        ],
+                        "vpcId": {
+                          "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

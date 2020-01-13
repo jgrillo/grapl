@@ -1,13 +1,15 @@
-from deployment.grapl_cdk.grapl_service import GraplService
-from deployment.grapl_cdk.event_source import EventSource
+from typing import Optional, Dict
 
-from aws_cdk import aws_core, aws_s3
+from grapl_cdk.grapl_service import GraplService
+from grapl_cdk.event_source import EventSource
+
+from aws_cdk import core, aws_s3
 from aws_cdk.aws_ec2 import IVpc, Vpc
 from aws_cdk.aws_lambda import Runtime
 
 
 class GeneratedUnidGraphsBucket(object):
-    def __init__(self, scope: aws_core.Construct, bucket_prefix: str):
+    def __init__(self, scope: core.Construct, bucket_prefix: str):
         self.bucket = aws_s3.Bucket.from_bucket_name(
             scope,
             id='GeneratedUnidGraphsBucked',
@@ -16,25 +18,20 @@ class GeneratedUnidGraphsBucket(object):
         self.bucket_name = self.bucket.bucket_name
 
 
-class GraphGenerator(GraplService):
+class GraphGenerator(object):
     def __init__(
             self,
-            scope: aws_core.Construct,
+            scope: core.Construct,
             id: str,
             bucket_prefix: str,
             event_name: str,
             handler_path: str,
             runtime: Runtime,
-            handler='main.lambda_handler'
+            handler='main.lambda_handler',
+            environment: Optional[Dict[str, str]] = None,
     ):
-        super().__init__(
-            scope=scope,
-            id=id,
-            vpc=Vpc.from_lookup(scope, id=f'{id}Vpc', vpc_name=f'{bucket_prefix}vpcs-stack/GraplVPC'),
-            handler_path=handler_path,
-            runtime=runtime,
-            handler=handler,
-        )
+
+        environment = environment or {}
 
         self.source_bucket = EventSource.import_from(
             scope,
@@ -45,5 +42,20 @@ class GraphGenerator(GraplService):
 
         self.dest_bucket = GeneratedUnidGraphsBucket(scope, bucket_prefix)
 
-        self.triggered_by(self.source_bucket)
-        self.output_to(self.dest_bucket.bucket)
+        default_environment = {
+            'SOURCE_BUCKET': self.source_bucket.bucket.bucket_name,
+            'DEST_BUCKET': self.dest_bucket.bucket_name,
+        }
+
+        self.service = GraplService(
+            scope=scope,
+            id=id,
+            vpc=Vpc.from_lookup(scope, id=f'{id}Vpc', vpc_name=f'{bucket_prefix}vpcs-stack/GraplVPC'),
+            handler_path=handler_path,
+            runtime=runtime,
+            handler=handler,
+            environment={**default_environment, **environment}
+        )
+
+        self.service.triggered_by(self.source_bucket)
+        self.service.output_to(self.dest_bucket.bucket)

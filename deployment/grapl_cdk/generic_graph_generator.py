@@ -1,11 +1,11 @@
-from deployment.grapl_cdk.event_source import EventSource
-from deployment.grapl_cdk.graph_generator import GraphGenerator
+from grapl_cdk.event_source import EventSource
+from grapl_cdk.graph_generator import GraphGenerator
 
-from aws_cdk import aws_core
+from aws_cdk import core
 from aws_cdk.aws_lambda import Runtime
 
 
-class SysmonGraphGenerator(aws_core.Stack):
+class SysmonGraphGenerator(core.Stack):
     def __init__(
             self,
             bucket_prefix: str,

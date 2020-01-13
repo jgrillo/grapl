@@ -17,7 +17,7 @@ class EventSource(object):
     @staticmethod
     def create(
             scope,
-            id,
+            id: str,
             bucket_prefix: str,
             event_name: str,
     ) -> 'EventSource':

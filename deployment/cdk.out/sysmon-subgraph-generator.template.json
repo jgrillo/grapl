@@ -1,0 +1,360 @@
+{
+  "Resources": {
+    "sysmonsubgraphgeneratorsubnetgroup": {
+      "Type": "AWS::ElastiCache::SubnetGroup",
+      "Properties": {
+        "Description": "List of subnets for {id}",
+        "SubnetIds": [
+          {
+            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet1SubnetC6852983C267B947"
+          },
+          {
+            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet2SubnetDAF9D2E0F9C618F3"
+          },
+          {
+            "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCPrivateSubnet3SubnetC625644E86F72BC2"
+          }
+        ],
+        "CacheSubnetGroupName": "sysmon-subgraph-generator-subnetgroup"
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generator-subnetgroup"
+      }
+    },
+    "sysmonsubgraphgeneratorsecuritygroup27A1E680": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "sysmon-subgraph-generator/sysmon-subgraph-generator-securitygroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Fn::ImportValue": "graplvpcs-stack:ExportsOutputRefGraplVPCD95366B5C69BF9D8"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generator-securitygroup/Resource"
+      }
+    },
+    "sysmonsubgraphgeneratorcachecluster": {
+      "Type": "AWS::ElastiCache::CacheCluster",
+      "Properties": {
+        "CacheNodeType": "cache.t2.small",
+        "Engine": "redis",
+        "NumCacheNodes": 1,
+        "AutoMinorVersionUpgrade": true,
+        "CacheSubnetGroupName": "sysmon-subgraph-generator-subnetgroup",
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "sysmonsubgraphgeneratorsecuritygroup27A1E680",
+              "GroupId"
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generator-cachecluster"
+      }
+    },
+    "sourcequeuesysmonsubgraphgenerator4ECFD90E": {
+      "Type": "AWS::SQS::Queue",
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/Resource"
+      }
+    },
+    "sourcequeuesysmonsubgraphgeneratorPolicy41451559": {
+      "Type": "AWS::SQS::QueuePolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sqs:SendMessage",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": "arn:aws:sns:us-east-1:251074890252:sysmon-log-topic"
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "sns.amazonaws.com"
+              },
+              "Resource": {
+                "Fn::GetAtt": [
+                  "sourcequeuesysmonsubgraphgenerator4ECFD90E",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Queues": [
+          {
+            "Ref": "sourcequeuesysmonsubgraphgenerator4ECFD90E"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/Policy/Resource"
+      }
+    },
+    "sourcequeuesysmonsubgraphgeneratorsysmonsubgraphgeneratorsysmonsubgraphgeneratorsourcetopic4D62AF3B21A15BB2": {
+      "Type": "AWS::SNS::Subscription",
+      "Properties": {
+        "Protocol": "sqs",
+        "TopicArn": "arn:aws:sns:us-east-1:251074890252:sysmon-log-topic",
+        "Endpoint": {
+          "Fn::GetAtt": [
+            "sourcequeuesysmonsubgraphgenerator4ECFD90E",
+            "Arn"
+          ]
+        },
+        "RawMessageDelivery": true,
+        "Region": "us-east-1"
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/source_queuesysmon-subgraph-generator/sysmonsubgraphgeneratorsysmonsubgraphgeneratorsourcetopic4D62AF3B/Resource"
+      }
+    },
+    "sysmonsubgraphgeneratorserviceServiceRoleD54530BA": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/ServiceRole/Resource"
+      }
+    },
+    "sysmonsubgraphgeneratorserviceServiceRoleDefaultPolicyE99E9CF2": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":s3:::grapl-sysmon-log-bucket"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": [
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::grapl-unid-subgraphs-generated-bucket"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::grapl-unid-subgraphs-generated-bucket/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "sysmonsubgraphgeneratorserviceServiceRoleDefaultPolicyE99E9CF2",
+        "Roles": [
+          {
+            "Ref": "sysmonsubgraphgeneratorserviceServiceRoleD54530BA"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "sysmonsubgraphgeneratorserviceSecurityGroupFB2EF896": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Automatic security group for Lambda Function sysmonsubgraphgeneratorsysmonsubgraphgeneratorservice5A547600",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": "vpc-0ef284d90191e2e9b"
+      },
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/SecurityGroup/Resource"
+      }
+    },
+    "sysmonsubgraphgeneratorserviceDAEF36D5": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3Bucket839F63B0"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3VersionKeyC001FB0F"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3VersionKeyC001FB0F"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Handler": "sysmon-subgraph-generator.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "sysmonsubgraphgeneratorserviceServiceRoleD54530BA",
+            "Arn"
+          ]
+        },
+        "Runtime": "provided",
+        "Environment": {
+          "Variables": {
+            "QUEUE_URL": {
+              "Ref": "sourcequeuesysmonsubgraphgenerator4ECFD90E"
+            },
+            "SOURCE_BUCKET": "grapl-sysmon-log-bucket",
+            "DEST_BUCKET": "grapl-unid-subgraphs-generated-bucket",
+            "EVENT_CACHE_ADDR": {
+              "Fn::GetAtt": [
+                "sysmonsubgraphgeneratorcachecluster",
+                "RedisEndpoint.Address"
+              ]
+            }
+          }
+        },
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "sysmonsubgraphgeneratorserviceSecurityGroupFB2EF896",
+                "GroupId"
+              ]
+            }
+          ],
+          "SubnetIds": [
+            "subnet-0d5686d9c98263bc9",
+            "subnet-0a64c2696a3229017"
+          ]
+        }
+      },
+      "DependsOn": [
+        "sysmonsubgraphgeneratorserviceServiceRoleDefaultPolicyE99E9CF2",
+        "sysmonsubgraphgeneratorserviceServiceRoleD54530BA"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "sysmon-subgraph-generator/sysmon-subgraph-generatorservice/Resource",
+        "aws:asset:path": "asset.84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30.zip",
+        "aws:asset:property": "Code"
+      }
+    }
+  },
+  "Parameters": {
+    "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3Bucket839F63B0": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30\""
+    },
+    "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30S3VersionKeyC001FB0F": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30\""
+    },
+    "AssetParameters84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30ArtifactHash4C1890CF": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"84c5bd2252c9454413d9c7b01cef2f5cad83274505dc8037159678af017f7d30\""
+    }
+  }
+}

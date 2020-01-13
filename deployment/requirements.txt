@@ -1,1 +1,9 @@
 -e .
+aws_cdk.aws_s3
+aws_cdk.aws_lambda
+aws_cdk.aws_sns
+aws_cdk.aws_sns_subscriptions
+aws_cdk.aws_iam
+aws_cdk.aws_elasticache
+aws_cdk.aws_ecs
+python-dotenv
