@@ -1,3 +1,4 @@
+from deployment.grapl_cdk.event_source import EventSource
 from deployment.grapl_cdk.graph_generator import GraphGenerator
 
 from aws_cdk import aws_core

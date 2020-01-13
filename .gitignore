@@ -1,4 +1,4 @@
-grapl-cdk/edge_ux_package/*
+deployment/edge_ux_package/*
 __pycache__/
 *.pyc
 .mypy_cache/
@@ -15,7 +15,7 @@ venv/
 
 log2/
 
-grapl-cdk/index.js
+deployment/index.js
 
 word-macro-analyzer/*/
 bootstrap

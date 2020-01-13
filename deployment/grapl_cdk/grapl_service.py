@@ -1,3 +1,13 @@
+from typing import cast
+
+from deployment.grapl_cdk.event_source import EventSource
+
+from aws_cdk import core, aws_s3, aws_sqs, aws_lambda, aws_iam, aws_sns_subscriptionss
+from aws_cdk.core import PhysicalName
+from aws_cdk.aws_ec2 import IVpc, Vpc
+from aws_cdk.aws_lambda import Code, Runtime
+from aws_cdk.aws_sns import ITopicSubscription
+
 
 class GraplService(object):
     def __init__(
@@ -6,6 +16,7 @@ class GraplService(object):
             id: str,
             vpc: IVpc,
             handler_path: str,
+            runtime: Runtime,
             handler='main.lambda_handler'
     ):
         self.vpc = vpc
@@ -21,9 +32,9 @@ class GraplService(object):
             id + 'service',
             code=Code.from_asset(handler_path),
             handler=handler,
-            runtime=Runtime.PYTHON_3_7,
+            runtime=runtime,
             vpc=vpc,
-            )
+        )
 
     def triggered_by(self, event_source: EventSource) -> 'GraplService':
         policy = aws_iam.PolicyStatement()

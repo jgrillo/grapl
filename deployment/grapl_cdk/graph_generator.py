@@ -1,62 +1,49 @@
-from typing import cast
-
+from deployment.grapl_cdk.grapl_service import GraplService
 from deployment.grapl_cdk.event_source import EventSource
 
-from aws_cdk import core, aws_s3, aws_sqs, aws_lambda, aws_iam, aws_sns_subscriptionss
-from aws_cdk.core import PhysicalName
+from aws_cdk import aws_core, aws_s3
 from aws_cdk.aws_ec2 import IVpc, Vpc
-from aws_cdk.aws_lambda import Code, Runtime
-from aws_cdk.aws_sns import ITopicSubscription
+from aws_cdk.aws_lambda import Runtime
 
 
-class GraplService(object):
+class GeneratedUnidGraphsBucket(object):
+    def __init__(self, scope: aws_core.Construct, bucket_prefix: str):
+        self.bucket = aws_s3.Bucket.from_bucket_name(
+            scope,
+            id='GeneratedUnidGraphsBucked',
+            bucket_name=f'{bucket_prefix}-unid-subgraphs-generated-bucket'
+        )
+        self.bucket_name = self.bucket.bucket_name
+
+
+class GraphGenerator(GraplService):
     def __init__(
             self,
-            scope: core.Construct,
+            scope: aws_core.Construct,
             id: str,
-            vpc: IVpc,
+            bucket_prefix: str,
+            event_name: str,
             handler_path: str,
+            runtime: Runtime,
             handler='main.lambda_handler'
     ):
-        self.vpc = vpc
-        self.scope = scope
-        self.queue = aws_sqs.Queue(
+        super().__init__(
             scope=scope,
-            id='source_queue' + id,
-            queue_name=PhysicalName.GENERATE_IF_NEEDED,
-        )
-
-        self.fn = aws_lambda.Function(
-            scope,
-            id + 'service',
-            code=Code.from_asset(handler_path),
+            id=id,
+            vpc=Vpc.from_lookup(scope, id=f'{id}Vpc', vpc_name=f'{bucket_prefix}vpcs-stack/GraplVPC'),
+            handler_path=handler_path,
+            runtime=runtime,
             handler=handler,
-            runtime=Runtime.PYTHON_3_7,
-            vpc=vpc,
         )
 
-    def triggered_by(self, event_source: EventSource) -> 'GraplService':
-        policy = aws_iam.PolicyStatement()
-
-        policy.add_actions('s3:GetObject')
-        policy.add_resources(event_source.bucket.bucket_arn)
-
-        self.fn.add_to_role_policy(policy)
-
-        dest = cast(
-            ITopicSubscription,
-            aws_sns_subscriptions.SqsSubscription(
-                queue=self.queue,
-                raw_message_delivery=True,
-            )
+        self.source_bucket = EventSource.import_from(
+            scope,
+            id,
+            bucket_prefix,
+            event_name,
         )
 
-        event_source.topic.add_subscription(
-            subscription=dest
-        )
+        self.dest_bucket = GeneratedUnidGraphsBucket(scope, bucket_prefix)
 
-        return self
-
-    def output_to(self, dest_bucket: aws_s3.Bucket) -> 'GraplService':
-        dest_bucket.grant_write(self.fn)
-        return self
+        self.triggered_by(self.source_bucket)
+        self.output_to(self.dest_bucket.bucket)
