@@ -1,5 +1,4 @@
 extern crate derive_dynamic_node;
-extern crate graph_descriptions;
 
 use derive_dynamic_node::DynamicNode as DN;
 

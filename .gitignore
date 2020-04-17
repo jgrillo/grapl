@@ -81,3 +81,5 @@ wheels/
 # Installer logs
 pip-log.txt
 
+.vscode
+

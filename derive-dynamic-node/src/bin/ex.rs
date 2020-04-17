@@ -4,13 +4,11 @@ extern crate derive_dynamic_node;
 extern crate serde_derive;
 #[macro_use]
 extern crate log;
+extern crate graph_descriptions;
 
-use grapl_graph_descriptions::graph_description::DynamicNode;
+use serde_derive::{Deserialize, Serialize};
 
-use serde_derive::Deserialize;
-use serde_derive::Serialize;
-
-use grapl_graph_descriptions::graph_description::*;
+use graph_descriptions::graph_description::*;
 
 use derive_dynamic_node::{DynamicNode, GraplStaticId};
 

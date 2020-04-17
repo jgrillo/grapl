@@ -46,7 +46,6 @@ use serde::Deserialize;
 
 use sqs_lambda::completion_event_serializer::CompletionEventSerializer;
 use sqs_lambda::event_decoder::PayloadDecoder;
-use sqs_lambda::event_emitter::S3EventEmitter;
 use sqs_lambda::event_handler::{Completion, EventHandler, OutputEvent};
 use sqs_lambda::event_processor::{EventProcessor, EventProcessorActor};
 use sqs_lambda::event_retriever::S3PayloadRetriever;
@@ -964,6 +963,7 @@ fn handler(event: SqsEvent, ctx: Context) -> Result<(), HandlerError> {
 
                 sqs_lambda::sqs_service::sqs_service(
                     queue_url,
+                    vec![],
                     bucket,
                     ctx,
                     S3Client::new(region.clone()),
@@ -983,7 +983,8 @@ fn handler(event: SqsEvent, ctx: Context) -> Result<(), HandlerError> {
                                 tx.send(worked).unwrap();
                             }
                         }
-                    }
+                    },
+                    move |_, _| async move {Ok(())}
                 ).await;
 
             });
