@@ -1,39 +1,14 @@
-FROM grapl/grapl-python-lambda-builder
+FROM grapl/grapl-python-lambda-builder AS engagement-creator-build
 WORKDIR /lambda
-
-COPY requirements.txt /tmp
+COPY ./requirements.txt /tmp
 RUN pip install --quiet -t /lambda -r /tmp/requirements.txt
-
-
-COPY src/ /lambda/
+COPY ./src /lambda/
 RUN python -m compileall -q /lambda
-
 RUN zip --quiet -9r /lambda.zip .
-FROM scratch
 
-FROM grapl/grapl-python-lambda-builder
-
-ADD requirements.txt /tmp
+FROM grapl/grapl-python-lambda-builder AS grapl-engagement-creator
+COPY ./requirements.txt /tmp
 RUN pip install -r /tmp/requirements.txt
-
 WORKDIR /app
 COPY ./src/ /src/
-
-COPY --from=0 /lambda.zip /
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+COPY --from=engagement-creator-build /lambda.zip /
