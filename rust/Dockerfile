@@ -14,11 +14,13 @@
 #
 
 FROM rust:alpine AS grapl-rust-build
+ARG release_target="release"
 RUN apk add --no-cache musl-dev
 RUN adduser -D --gecos '' --home /home/grapl --shell /bin/bash grapl
 USER grapl
 ENV USER grapl
-WORKDIR /home/grapl
+RUN mkdir /home/grapl/grapl
+WORKDIR /home/grapl/grapl
 # build a fake project structure, but copy in the real Cargo.tomls
 RUN cargo new --bin analyzer-dispatcher
 COPY --chown=grapl analyzer-dispatcher/Cargo.toml analyzer-dispatcher/Cargo.toml
@@ -46,36 +48,51 @@ COPY --chown=grapl sysmon-subgraph-generator/Cargo.toml sysmon-subgraph-generato
 COPY --chown=grapl Cargo.lock .
 COPY --chown=grapl Cargo.toml .
 # vendor and build the deps
-RUN mkdir /home/grapl/.cargo
-RUN cargo vendor > /home/grapl/.cargo/config
-# FIXME: cargo test && cargo build --release
+RUN mkdir /home/grapl/grapl/.cargo
+RUN cargo vendor > /home/grapl/grapl/.cargo/config
+# FIXME: cargo test instead of cargo build once the tests work
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
+# remove all the fake project crap
+RUN rm -r analyzer-dispatcher && \
+  rm -r derive-dynamic-node && \
+  rm -r generic-subgraph-generator && \
+  rm -r graph-descriptions && \
+  rm -r graph-generator-lib && \
+  rm -r graph-merger && \
+  rm -r grapl-config
 # copy in the source tree (we do this part separately s.t. docker caches the deps)
 COPY --chown=grapl ./ .
 # build everything
-# FIXME: cargo test && cargo build --release
+# FIXME: cargo test instead of cargo build once the tests work
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
-
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
+RUN mkdir -p ~/bin/${release_target}
+RUN cp target/${release_target}/analyzer-dispatcher ~/bin/${release_target}/ && \
+    cp target/${release_target}/graph-merger ~/bin/${release_target}/ && \
+    cp target/${release_target}/node-identifier ~/bin/${release_target}/ && \
+    cp target/${release_target}/node-identifier-retry-handler ~/bin/${release_target}/ && \
+    cp target/${release_target}/sysmon-subgraph-generator ~/bin/${release_target}/
 # analyzer-dispatcher
 FROM alpine AS grapl-analyzer-dispatcher
-COPY --from=grapl-rust-build /home/grapl/target/x86_64-unknown-linux-musl/release/analyzer-dispatcher /
+COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/analyzer-dispatcher /
 CMD ["analyzer-dispatcher"]
 
 # graph-merger
 FROM alpine AS grapl-graph-merger
-COPY --from=grapl-rust-build /home/grapl/target/x86_64-unknown-linux-musl/release/graph-merger /
+COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/graph-merger /
 CMD ["graph-merger"]
 
 # node-identifier
 FROM alpine AS grapl-node-identifier
-COPY --from=grapl-rust-build /home/grapl/target/x86_64-unknown-linux-musl/release/node-identifier /
+COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/node-identifier /
 CMD ["node-identifier"]
 
 FROM alpine AS grapl-node-identifier-retry-handler
-COPY --from=grapl-rust-build /home/grapl/target/x86_64-unknown-linux-musl/release/node-identifier-retry-handler /
+COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/node-identifier-retry-handler /
 CMD ["node-identifier-retry-handler"]
 
 # sysmon-subgraph-generator
 FROM alpine AS grapl-sysmon-subgraph-generator
-COPY --from=grapl-rust-build /home/grapl/target/x86_64-unknown-linux-musl/release/sysmon-subgraph-generator /
+COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/sysmon-subgraph-generator /
 CMD ["sysmon-subgraph-generator"]
