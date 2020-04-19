@@ -37,9 +37,9 @@ RUN cargo new --lib grapl-config
 COPY --chown=grapl grapl-config/Cargo.toml grapl-config/Cargo.toml
 # this is gross, we have to do it because node-identifier's Cargo.toml as [[bin]] sections
 RUN cargo new --bin node-identifier && \
-  mkdir -p node-identifier/src/bin && \
-  cp node-identifier/src/main.rs node-identifier/src/bin/node-identifier.rs && \
-  cp node-identifier/src/main.rs node-identifier/src/bin/node-identifier-retry-handler.rs
+    mkdir -p node-identifier/src/bin && \
+    cp node-identifier/src/main.rs node-identifier/src/bin/node-identifier.rs && \
+    cp node-identifier/src/main.rs node-identifier/src/bin/node-identifier-retry-handler.rs
 COPY --chown=grapl node-identifier/Cargo.toml node-identifier/Cargo.toml
 RUN cargo new --bin sysmon-subgraph-generator
 COPY --chown=grapl sysmon-subgraph-generator/Cargo.toml sysmon-subgraph-generator/Cargo.toml
@@ -54,12 +54,12 @@ RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
 # remove all the fake project crap
 RUN rm -r analyzer-dispatcher && \
-  rm -r derive-dynamic-node && \
-  rm -r generic-subgraph-generator && \
-  rm -r graph-descriptions && \
-  rm -r graph-generator-lib && \
-  rm -r graph-merger && \
-  rm -r grapl-config
+    rm -r derive-dynamic-node && \
+    rm -r generic-subgraph-generator && \
+    rm -r graph-descriptions && \
+    rm -r graph-generator-lib && \
+    rm -r graph-merger && \
+    rm -r grapl-config
 # copy in the source tree (we do this part separately s.t. docker caches the deps)
 COPY --chown=grapl ./ .
 # build everything
