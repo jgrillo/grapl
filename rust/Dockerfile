@@ -19,8 +19,7 @@ RUN apk add --no-cache musl-dev
 RUN adduser -D --gecos '' --home /home/grapl --shell /bin/bash grapl
 USER grapl
 ENV USER grapl
-RUN mkdir /home/grapl/grapl
-WORKDIR /home/grapl/grapl
+WORKDIR /home/grapl
 # build a fake project structure, but copy in the real Cargo.tomls
 RUN cargo new --bin analyzer-dispatcher
 COPY --chown=grapl analyzer-dispatcher/Cargo.toml analyzer-dispatcher/Cargo.toml
@@ -48,8 +47,8 @@ COPY --chown=grapl sysmon-subgraph-generator/Cargo.toml sysmon-subgraph-generato
 COPY --chown=grapl Cargo.lock .
 COPY --chown=grapl Cargo.toml .
 # vendor and build the deps
-RUN mkdir /home/grapl/grapl/.cargo
-RUN cargo vendor > /home/grapl/grapl/.cargo/config
+RUN mkdir /home/grapl/.cargo
+RUN cargo vendor > /home/grapl/.cargo/config
 # FIXME: cargo test instead of cargo build once the tests work
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
