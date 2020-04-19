@@ -1,7 +1,7 @@
 extern crate aws_lambda_events;
 #[macro_use]
 extern crate failure;
-extern crate graph_descriptions;
+extern crate grapl_graph_descriptions as graph_descriptions;
 extern crate graph_generator_lib;
 extern crate lambda_runtime as lambda;
 #[macro_use]

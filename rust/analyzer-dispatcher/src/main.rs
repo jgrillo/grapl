@@ -5,7 +5,7 @@ extern crate base64;
 extern crate dgraph_rs;
 #[macro_use] extern crate failure;
 extern crate futures;
-extern crate graph_descriptions;
+extern crate grapl_graph_descriptions as graph_descriptions;
 extern crate grpc;
 extern crate lambda_runtime as lambda;
 #[macro_use] extern crate log;

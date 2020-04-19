@@ -4,7 +4,7 @@ extern crate derive_dynamic_node;
 extern crate serde_derive;
 #[macro_use]
 extern crate log;
-extern crate graph_descriptions;
+extern crate grapl_graph_descriptions as graph_descriptions;
 
 use serde_derive::{Deserialize, Serialize};
 

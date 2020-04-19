@@ -5,7 +5,7 @@ extern crate base58;
 #[macro_use]
 extern crate failure;
 extern crate futures;
-extern crate graph_descriptions;
+extern crate grapl_graph_descriptions as graph_descriptions;
 extern crate hex;
 #[macro_use]
 extern crate hmap;

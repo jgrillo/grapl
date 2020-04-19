@@ -1,7 +1,7 @@
 extern crate base16;
 extern crate failure;
 extern crate futures;
-extern crate graph_descriptions;
+extern crate grapl_graph_descriptions as graph_descriptions;
 #[macro_use] extern crate log;
 extern crate prost;
 extern crate rusoto_core;
