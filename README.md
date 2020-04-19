@@ -4,7 +4,7 @@ Grapl is a Graph Platform for Detection and Response with a focus on helping Det
 
 For a more in depth overview of Grapl, [read this](https://insanitybit.github.io/2019/03/09/grapl).
 
-Essentially, Grapl will take raw logs, convert them into graphs, and merge those graphs into a Master Graph. It will then orchestrate the execution of your attack signatures, and provide tools for performing your investigations. Or watch [this talk at BSidesLV](https://www.youtube.com/watch?v=LjCtbpXQA9U&t=8028s).
+Essentially, Grapl will take raw logs, convert them into graphs, and merge those graphs into a Master Graph. It will then orchestrate the execution of your attack signatures, and provide tools for performing your investigations. Or watch [this talk at BSidesLV](https://www.youtube.com/watch?v=LjCtbpXQA9U&t=8028s) or [this talk at BSides San Francisco](https://www.youtube.com/watch?v=uErWRAJ4I4w) .
 
 Grapl natively supports nodes for:
 
@@ -21,7 +21,7 @@ Keep in mind that Grapl is not yet at a stable, 1.0 state, and is a fast moving 
 
 [Setup](https://github.com/insanitybit/grapl#setup)
 
-Questions? Try opening an issue in this repo, or joining the [Grapl slack channel (Click for invite)](https://join.slack.com/t/grapl-dfir/shared_invite/enQtODQzNzc4Nzg5MTA3LTllZTYzNWY1ZjQxMGI5NDlkODkzZTc0Nzk2ZDUwZjBiMjRhMGM4ZjRiYWUxYTY5NDExNWFlMzRmY2FhMDljMDk).
+Questions? Try opening an issue in this repo, or joining the [Grapl slack channel (Click for invite)](https://join.slack.com/t/grapl-dfir/shared_invite/zt-armk3shf-nuY19fQQuUnYk~dHltUPCw).
 
 ## Key Features
 
@@ -157,3 +157,4 @@ This requires the [boto3](https://github.com/boto/boto3) and [zstd](https://pypi
 *Note that this may impose charges to your AWS account.*
 
 To use the Grapl UX you must navigate to the `index.html` in the grapl ux bucket.
+https://<YOUR_BUCKET_PREFIX>engagement-ux-bucket.s3.amazonaws.com/index.html

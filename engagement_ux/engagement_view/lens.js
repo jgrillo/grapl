@@ -371,7 +371,8 @@ const graph2d = (elem) => {
         })
         .linkDirectionalParticles(1)
         .linkDirectionalParticleWidth((link) => {
-            return calcLinkParticleWidth(link, Graph);
+            return calcLinkParticleWidth(link, 
+                document.getElementById('graph'));
         })
         .linkDirectionalParticleColor((link) => {
             return calcLinkColor(link, Graph)
@@ -384,7 +385,7 @@ const graph2d = (elem) => {
         .linkDirectionalArrowLength(8)
         // .linkDirectionalArrowColor(link => {
         //     return'rgba(323,421,543,224)'
-        // })
+                 // })
         .linkDirectionalArrowRelPos(link => {
             return calcLinkDirectionalArrowRelPos(link, Graph);
         })
@@ -580,6 +581,78 @@ class GraphManager {
                     return false;
                     // }
                 }
+            }
+        }
+
+        this.graph.links.push(newLink);
+        return true;
+    }
+
+    removeNode = (uid) => {
+        for (let i = 0; i < this.graph.nodes.length; i++) {
+            if (this.graph.nodes[i].uid === uid) {
+                this.graph.nodes.splice(i, 1);
+            }
+        }
+    };
+
+    removeLink = (uid) => {
+        for (let i = 0; i < this.graph.links.length; i++) {
+            if (this.graph.links[i].source.uid === uid) {
+                this.graph.links.splice(i, 1);
+                continue
+            }
+            if (this.graph.links[i].target.uid === uid) {
+                this.graph.links.splice(i, 1);
+            }
+        }
+    };
+
+    removeNodesAndLinks = (toRemove) => {
+        for (const deadNode of toRemove) {
+            this.removeNode(deadNode);
+        }
+
+        for (const deadLink of toRemove) {
+            this.removeLink(deadLink);
+        }
+
+        // console.log("Removed nodes and links ", this.graph.nodes, this.graph.links);
+    };
+
+    updateGraph = (newGraph) => {
+        if (newGraph.nodes.length === 0 && newGraph.links.length === 0) {
+            return
+        }
+
+        if (newGraph === this.graph) {
+            return
+        }
+
+        let updated = false;
+        for (const newNode of newGraph.nodes) {
+            if (this.updateNode(newNode)) {
+                updated = true;
+            }
+        }
+
+        for (const newLink of newGraph.links) {
+            if (this.updateLink(newLink)) {
+                updated = true;
+            }
+        }
+
+        if (updated) {
+            this.update();
+        }
+    };
+
+    update = () => {
+        this.viz.graphData({...this.graph})
+
+    };
+
+}
             }
         }
 
