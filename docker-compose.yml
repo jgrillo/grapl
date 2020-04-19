@@ -89,7 +89,7 @@ services:
   grapl-node-identifier-retry-handler:
     build:
       context: ./rust
-      target: grapl-node-identifier
+      target: grapl-node-identifier-retry-handler
     command: ./node-identifier-retry-handler
     environment:
       - BUCKET_PREFIX="local-grapl"
