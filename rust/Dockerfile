@@ -15,6 +15,7 @@
 
 FROM rust:alpine AS grapl-rust-build
 ARG release_target="release"
+RUN apk update
 RUN apk add --no-cache musl-dev
 RUN adduser -D --gecos '' --home /home/grapl --shell /bin/bash grapl
 USER grapl

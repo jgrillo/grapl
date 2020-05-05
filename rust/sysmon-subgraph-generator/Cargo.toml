@@ -5,7 +5,7 @@ authors = ["Insanitybit <insanitybit@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-grapl-graph-descriptions = "0.2.6"
+grapl-graph-descriptions = {path = "../graph-descriptions"}
 
 sqs-lambda = "0.20.*"
 serde_json = "*"
