@@ -15,8 +15,9 @@
 
 FROM rust:alpine AS grapl-rust-build
 ARG release_target="release"
-RUN apk update
-RUN apk add --no-cache musl-dev
+RUN apk add --no-cache musl-dev libc6-compat protoc
+ENV PROTOC /usr/bin/protoc
+ENV PROTOC_INCLUDE /usr/include
 RUN adduser -D --gecos '' --home /home/grapl --shell /bin/bash grapl
 USER grapl
 ENV USER grapl
@@ -68,31 +69,37 @@ COPY --chown=grapl ./ .
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
 RUN mkdir -p ~/bin/${release_target}
-RUN cp target/${release_target}/analyzer-dispatcher ~/bin/${release_target}/ && \
-    cp target/${release_target}/graph-merger ~/bin/${release_target}/ && \
-    cp target/${release_target}/node-identifier ~/bin/${release_target}/ && \
-    cp target/${release_target}/node-identifier-retry-handler ~/bin/${release_target}/ && \
-    cp target/${release_target}/sysmon-subgraph-generator ~/bin/${release_target}/
+RUN cp target/${release_target}/analyzer-dispatcher ~/bin/${release_target}/analyzer-dispatcher && \
+    cp target/${release_target}/graph-merger ~/bin/${release_target}/graph-merger && \
+    cp target/${release_target}/node-identifier ~/bin/${release_target}/node-identifier && \
+    cp target/${release_target}/node-identifier-retry-handler ~/bin/${release_target}/node-identifier-retry-handler && \
+    cp target/${release_target}/sysmon-subgraph-generator ~/bin/${release_target}/sysmon-subgraph-generator
+
 # analyzer-dispatcher
 FROM alpine AS grapl-analyzer-dispatcher
+ARG release_target="release"
 COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/analyzer-dispatcher /
 CMD ["analyzer-dispatcher"]
 
 # graph-merger
 FROM alpine AS grapl-graph-merger
+ARG release_target="release"
 COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/graph-merger /
 CMD ["graph-merger"]
 
 # node-identifier
 FROM alpine AS grapl-node-identifier
+ARG release_target="release"
 COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/node-identifier /
 CMD ["node-identifier"]
 
 FROM alpine AS grapl-node-identifier-retry-handler
+ARG release_target="release"
 COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/node-identifier-retry-handler /
 CMD ["node-identifier-retry-handler"]
 
 # sysmon-subgraph-generator
 FROM alpine AS grapl-sysmon-subgraph-generator
+ARG release_target="release"
 COPY --from=grapl-rust-build /home/grapl/bin/${release_target}/sysmon-subgraph-generator /
 CMD ["sysmon-subgraph-generator"]
