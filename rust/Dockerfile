@@ -22,6 +22,7 @@ RUN adduser -D --gecos '' --home /home/grapl --shell /bin/bash grapl
 USER grapl
 ENV USER grapl
 WORKDIR /home/grapl
+
 # build a fake project structure, but copy in the real Cargo.tomls
 RUN cargo new --bin analyzer-dispatcher
 COPY --chown=grapl analyzer-dispatcher/Cargo.toml analyzer-dispatcher/Cargo.toml
@@ -37,7 +38,7 @@ RUN cargo new --bin graph-merger
 COPY --chown=grapl graph-merger/Cargo.toml graph-merger/Cargo.toml
 RUN cargo new --lib grapl-config
 COPY --chown=grapl grapl-config/Cargo.toml grapl-config/Cargo.toml
-# this is gross, we have to do it because node-identifier's Cargo.toml as [[bin]] sections
+# this is gross, we have to do it because node-identifier's Cargo.toml has [[bin]] sections
 RUN cargo new --bin node-identifier && \
     mkdir -p node-identifier/src/bin && \
     cp node-identifier/src/main.rs node-identifier/src/bin/node-identifier.rs && \
@@ -45,15 +46,20 @@ RUN cargo new --bin node-identifier && \
 COPY --chown=grapl node-identifier/Cargo.toml node-identifier/Cargo.toml
 RUN cargo new --bin sysmon-subgraph-generator
 COPY --chown=grapl sysmon-subgraph-generator/Cargo.toml sysmon-subgraph-generator/Cargo.toml
+
 # copy in the top-level Cargo.toml and Cargo.lock
 COPY --chown=grapl Cargo.lock .
 COPY --chown=grapl Cargo.toml .
+
 # vendor and build the deps
 RUN mkdir /home/grapl/.cargo
 RUN cargo vendor > /home/grapl/.cargo/config
 # FIXME: cargo test instead of cargo build once the tests work
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build && \
+    if [ "${release_target}" == "release" ]; \
+      then RUSTFLAGS="-C target-feature=-crt-static" cargo build --release; \
+    fi
+
 # remove all the fake project crap
 RUN rm -r analyzer-dispatcher && \
     rm -r derive-dynamic-node && \
@@ -62,12 +68,23 @@ RUN rm -r analyzer-dispatcher && \
     rm -r graph-generator-lib && \
     rm -r graph-merger && \
     rm -r grapl-config
+
 # copy in the source tree (we do this part separately s.t. docker caches the deps)
-COPY --chown=grapl ./ .
+COPY --chown=grapl analyzer-dispatcher analyzer-dispatcher
+COPY --chown=grapl derive-dynamic-node derive-dynamic-node
+COPY --chown=grapl generic-subgraph-generator generic-subgraph-generator
+COPY --chown=grapl graph-descriptions graph-descriptions
+COPY --chown=grapl graph-generator-lib graph-generator-lib
+COPY --chown=grapl graph-merger graph-merger
+COPY --chown=grapl grapl-config grapl-config
+
 # build everything
 # FIXME: cargo test instead of cargo build once the tests work
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build --release
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build && \
+    if [ "${release_target}" == "release" ]; \
+      then RUSTFLAGS="-C target-feature=-crt-static" cargo build --release; \
+    fi
+
 RUN mkdir -p ~/bin/${release_target}
 RUN cp target/${release_target}/analyzer-dispatcher ~/bin/${release_target}/analyzer-dispatcher && \
     cp target/${release_target}/graph-merger ~/bin/${release_target}/graph-merger && \
