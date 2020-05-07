@@ -55,8 +55,8 @@ COPY --chown=grapl Cargo.toml .
 RUN mkdir /home/grapl/.cargo
 RUN cargo vendor > /home/grapl/.cargo/config
 # FIXME: cargo test instead of cargo build once the tests work
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build && \
-    if [ "${release_target}" == "release" ]; \
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
+RUN if [ "${release_target}" == "release" ]; \
       then RUSTFLAGS="-C target-feature=-crt-static" cargo build --release; \
     fi
 
@@ -80,8 +80,8 @@ COPY --chown=grapl grapl-config grapl-config
 
 # build everything
 # FIXME: cargo test instead of cargo build once the tests work
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build && \
-    if [ "${release_target}" == "release" ]; \
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo build
+RUN if [ "${release_target}" == "release" ]; \
       then RUSTFLAGS="-C target-feature=-crt-static" cargo build --release; \
     fi
 
